@@ -1,0 +1,1 @@
+(self.webpackChunkfrankencoin_frontend=self.webpackChunkfrankencoin_frontend||[]).push([[6563],{36563:function(){}}]);
