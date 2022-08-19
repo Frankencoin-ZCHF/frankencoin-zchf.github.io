@@ -1,1 +1,0 @@
-(self.webpackChunkfrankencoin_frontend=self.webpackChunkfrankencoin_frontend||[]).push([[7790,8329,4343],{27790:function(){}}]);
