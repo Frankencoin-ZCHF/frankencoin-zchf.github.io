@@ -12,4 +12,10 @@ export { default as MINTINGHUB_ABI } from './abi/MintingHub.json';
 export { default as MOCKXCHFTOKEN_ABI } from './abi/MockXCHFToken.json';
 export { default as STABLECOINBRIDGE_ABI } from './abi/StablecoinBridge.json';
 
-export { default as addresses } from './addresses.json';
+export const addresses = {
+  mintingHub: import.meta.env.VITE_APP_ADDRESS_MINTINGHUB,
+  stableCoin: import.meta.env.VITE_APP_ADDRESS_XCHF,
+  bridge: import.meta.env.VITE_APP_ADDRESS_BRIDGE,
+  frankencoin: import.meta.env.VITE_APP_ADDRESS_FRANKENCOIN,
+  equity: import.meta.env.VITE_APP_ADDRESS_EQUITY,
+};

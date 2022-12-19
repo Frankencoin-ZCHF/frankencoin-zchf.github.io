@@ -4,20 +4,13 @@ import useUsersRepository from '@/repositories/useUsersRepository';
 
 let signer;
 
+const localStorageKey = 'FRANKENCOIN_USER';
+
 export default defineStore('auth', {
   state: () => ({
-    wallet: useStorage(
-      import.meta.env.VITE_APP_LOCALSTORAGE_USER + '_wallet',
-      null
-    ),
-    chainId: useStorage(
-      import.meta.env.VITE_APP_LOCALSTORAGE_USER + '_chainId',
-      null
-    ),
-    connector: useStorage(
-      import.meta.env.VITE_APP_LOCALSTORAGE_USER + '_connector',
-      null
-    ),
+    wallet: useStorage(localStorageKey + '_wallet', null),
+    chainId: useStorage(localStorageKey + '_chainId', null),
+    connector: useStorage(localStorageKey + '_connector', null),
   }),
 
   getters: {
