@@ -1,0 +1,27 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  @apply bg-gray-100 antialiased overflow-y-scroll;
+}
+
+.text-link,
+p > a {
+  text-decoration: underline;
+
+  @apply transition-opacity duration-200 ease-out;
+  @apply hover:opacity-70;
+}
+
+* {
+  @apply outline-neutral-200;
+}
+
+p + * {
+  @apply mt-4;
+}
+
+::selection {
+  @apply bg-neutral-200;
+}
