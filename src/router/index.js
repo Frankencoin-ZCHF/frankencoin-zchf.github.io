@@ -19,7 +19,7 @@ const router = createRouter({
       name: 'home',
       component: HomeView,
       meta: {
-        documentation: 'https://frankencoin.k8s.liip.ch/',
+        documentation: 'https://docs.frankencoin.com/',
       },
     },
     {
@@ -27,7 +27,7 @@ const router = createRouter({
       name: 'swap',
       component: SwapView,
       meta: {
-        documentation: 'https://frankencoin.k8s.liip.ch/',
+        documentation: 'https://docs.frankencoin.com/',
       },
     },
     {
@@ -35,7 +35,7 @@ const router = createRouter({
       name: 'positions',
       component: PositionsView,
       meta: {
-        documentation: 'https://frankencoin.k8s.liip.ch/',
+        documentation: 'https://docs.frankencoin.com/',
       },
     },
     {
@@ -43,7 +43,7 @@ const router = createRouter({
       name: 'auctions',
       component: AuctionsView,
       meta: {
-        documentation: 'https://frankencoin.k8s.liip.ch/',
+        documentation: 'https://docs.frankencoin.com/',
       },
     },
     {
@@ -51,20 +51,23 @@ const router = createRouter({
       name: 'pool',
       component: PoolView,
       meta: {
-        documentation: 'https://frankencoin.k8s.liip.ch/',
+        documentation: 'https://docs.frankencoin.com/',
       },
     },
     {
       path: '/position/open/:address',
       name: 'positionOpen',
       component: PositionOpenView,
+      meta: {
+        documentation: 'https://docs.frankencoin.com/',
+      },
     },
     {
       path: '/position/adjust/:address',
       name: 'positionAdjust',
       component: PositionAdjustView,
       meta: {
-        documentation: 'https://frankencoin.k8s.liip.ch/',
+        documentation: 'https://docs.frankencoin.com/',
       },
     },
     {
@@ -72,18 +75,24 @@ const router = createRouter({
       name: 'positionDetail',
       component: PositionDetailView,
       meta: {
-        documentation: 'https://frankencoin.k8s.liip.ch/',
+        documentation: 'https://docs.frankencoin.com/',
       },
     },
     {
       path: '/position/challenge/:address',
       name: 'positionChallenge',
       component: PositionChallengeView,
+      meta: {
+        documentation: 'https://docs.frankencoin.com/',
+      },
     },
     {
       path: '/position/bid/:address/:challenge',
       name: 'positionPlaceBid',
       component: PositionPlaceBid,
+      meta: {
+        documentation: 'https://docs.frankencoin.com/',
+      },
     },
   ],
   scrollBehavior() {
