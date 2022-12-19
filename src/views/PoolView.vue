@@ -49,8 +49,8 @@
 
       <div class="m-2">
         Contract
-        <a class="text-link text-red" target="_blank" :href="frankencoin.url">
-          {{ frankencoin.shortenAddress }}
+        <a class="text-link text-red" target="_blank" :href="equity.url">
+          {{ equity.shortenAddress }}
         </a>
       </div>
 

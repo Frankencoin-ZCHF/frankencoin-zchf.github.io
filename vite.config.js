@@ -7,7 +7,6 @@ import rollupNodePolyFill from 'rollup-plugin-node-polyfills';
 import vue from '@vitejs/plugin-vue';
 
 export default defineConfig({
-  homepage: 'https://frankencoin-zchf.github.io/',
   server: {
     host: true,
   },
