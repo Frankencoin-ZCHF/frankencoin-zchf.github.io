@@ -1,0 +1,6 @@
+{
+    "extends": ["stylelint-config-standard", "stylelint-config-prettier", "stylelint-config-rawbot"],
+    "rules": {
+        "selector-nested-pattern": "^&"
+    }
+}
