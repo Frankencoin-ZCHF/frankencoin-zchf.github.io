@@ -11,7 +11,7 @@
         @click="setMax()"
         v-if="auth.isConnected && symbol && hasMax && !loading"
       >
-        <div v-if="hasMax" class="flex items-center gap-2">
+        <div v-if="hasMax && !hideMaxLabel" class="flex items-center gap-2">
           <AppIcon icon="Wallet" size="small" v-if="fromWallet" />
           {{ formatCurrency(max, 4) }}
           {{ symbol }}
@@ -55,6 +55,10 @@ const props = defineProps({
   note: String,
   fromWallet: Boolean,
   clickableMax: Boolean,
+  hideMaxLabel: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 const hasMax = computed(() => props.max !== null);

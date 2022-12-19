@@ -6,6 +6,7 @@
     :fromWallet="fromWallet"
     :clickableMax="true"
     @setMax="setMax"
+    :hideMaxLabel="hideMaxLabel"
   >
     <div class="flex gap-1 rounded-lg bg-neutral-100 p-1">
       <input
@@ -24,6 +25,8 @@
         @keyup="emit('update:modelValue', $event.target.value)"
       />
 
+      <AppButton field @click="setMax" v-if="displayMaxButton">Max</AppButton>
+
       <slot name="action"></slot>
     </div>
 
@@ -39,6 +42,7 @@
 <script setup>
 import { computed } from 'vue';
 import SwapField from '@/components/SwapField.vue';
+import AppButton from '@/components/AppButton.vue';
 import DisplayAmount from '@/components/DisplayAmount.vue';
 
 const emit = defineEmits(['update:modelValue']);
@@ -65,6 +69,14 @@ const props = defineProps({
   fromWallet: {
     type: Boolean,
     default: true,
+  },
+  displayMaxButton: {
+    type: Boolean,
+    default: false,
+  },
+  hideMaxLabel: {
+    type: Boolean,
+    default: false,
   },
   error: Object,
 });

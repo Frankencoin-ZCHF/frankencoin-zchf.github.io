@@ -13,7 +13,9 @@
             v-model.number="amount"
             label="Borrow"
             :max="borrowingLimit"
-            :fromWallet="isBorrowingLimitFromWallet"
+            :hideMaxLabel="true"
+            :fromWallet="false"
+            :displayMaxButton="true"
             symbol="ZCHF"
           />
 

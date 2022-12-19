@@ -86,11 +86,14 @@ const currencyA = ref({
   transaction: async () => {
     pending.value = true;
 
-    const tx = await zchfToFps(amount, reload);
+    const tx = await zchfToFps(amount);
 
     pending.value = false;
 
-    if (!tx.error) amount.value = 0;
+    if (!tx.error) {
+      amount.value = 0;
+      await reload();
+    }
   },
 });
 
@@ -104,11 +107,14 @@ const currencyB = ref({
   transaction: async () => {
     pending.value = true;
 
-    const tx = await fpsToZchf(amount, reload);
+    const tx = await fpsToZchf(amount);
 
     pending.value = false;
 
-    if (!tx.error) amount.value = 0;
+    if (!tx.error) {
+      amount.value = 0;
+      await reload();
+    }
   },
 });
 
@@ -172,7 +178,7 @@ const updateConversionNote = () => {
 };
 
 watch([loading, isCalculating, amount, isReversed], () => {
-  if (!loading.value && !wrongChain.value) calculate();
+  if (!loading.value && !wrongChain.value && !pending.value) calculate();
   if (!isCalculating.value) updateConversionNote();
 });
 

@@ -5,5 +5,5 @@ export function floatToDec18(value) {
 }
 
 export function dec18ToFloat(value) {
-  return Number(ethers.utils.formatEther(value));
+  return Number(ethers.utils.formatEther(BigInt(value)));
 }

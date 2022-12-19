@@ -1,25 +1,20 @@
 import { FRANKENCOIN_ABI, addresses } from '@/contracts/dictionnary';
 
 import config from '@/config';
-import useAuth from '@/auth';
 
 import useContract from '@/composables/useContract';
 import useNotification from '@/composables/useNotification';
 import useTransaction from '@/composables/useTransaction';
 
-import { floatToDec18 } from '@/utils/math';
+import { floatToDec18, dec18ToFloat } from '@/utils/math';
 import { formatCurrency } from '@/utils/formatNumber';
 
-export default async (amount, reload) => {
-  const auth = useAuth();
-
+export default async (amount) => {
   const { executeTransaction } = useTransaction();
   const { addNotification } = useNotification();
   const { contract } = useContract(addresses.frankencoin, FRANKENCOIN_ABI);
 
   const dAmount = floatToDec18(amount.value);
-
-  const userFPS = auth.user.FPS;
 
   const transaction = async () =>
     await contract.transferAndCall(addresses.equity, dAmount, 0);
@@ -27,9 +22,9 @@ export default async (amount, reload) => {
   const tx = await executeTransaction(transaction);
 
   if (!tx.error) {
-    await reload();
+    const txReceipt = await config.provider.getTransactionReceipt(tx.hash);
 
-    const received = formatCurrency(auth.user.FPS - userFPS, 5);
+    const received = formatCurrency(dec18ToFloat(txReceipt.logs[1].data), 5);
 
     addNotification({
       type: 'success',
