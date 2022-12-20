@@ -2,6 +2,7 @@ import { ethers } from 'ethers';
 import useAuth from '@/auth';
 import blockchain from '@/config';
 import WalletConnectProvider from '@walletconnect/web3-provider';
+import detectEthereumProvider from '@metamask/detect-provider';
 
 export default () => {
   const auth = useAuth();
@@ -23,14 +24,13 @@ export default () => {
 
       await walletProvider.enable();
     } else {
-      walletProvider = window.ethereum;
-      await walletProvider.enable();
+      await ethereum.request({ method: 'eth_requestAccounts' });
+      walletProvider = await detectEthereumProvider();
     }
 
     web3Provider = new ethers.providers.Web3Provider(walletProvider);
 
     const { chainId } = await web3Provider.getNetwork();
-
     const signer = web3Provider.getSigner();
     const wallet = ethers.utils.getAddress(await signer.getAddress());
 
@@ -61,7 +61,16 @@ export default () => {
   };
 
   if (auth.isConnected) {
-    login(auth.connector);
+    (async () => {
+      const metamaskProvider = await detectEthereumProvider();
+
+      if (auth.connector == 'metamask' && !metamaskProvider.selectedAddress) {
+        auth.disconnect();
+        return;
+      }
+
+      login(auth.connector);
+    })();
   }
 
   return {
