@@ -20,7 +20,9 @@ import useAuth from '@/auth';
 export default () => {
   const auth = useAuth();
 
-  const wrongChain = computed(() => auth.chainId != blockchain.targetChainId);
+  const wrongChain = computed(
+    () => auth.isConnected && auth.chainId != blockchain.targetChainId
+  );
 
   const frankencoinRepository = useFrankencoinRepository();
   const equityRepository = useEquityRepository();
