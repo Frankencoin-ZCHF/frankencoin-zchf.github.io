@@ -1,4 +1,5 @@
 import Token from './Token';
+import { fixedNumberOperate } from '@/utils/math';
 
 export default class Stablecoin extends Token {
   static entity = 'stablecoin';
@@ -8,14 +9,14 @@ export default class Stablecoin extends Token {
     return {
       ...super.fields(),
 
-      bridgeBalance: this.number(null),
-      bridgeLimit: this.number(null),
+      bridgeBalance: this.string(null),
+      bridgeLimit: this.string(null),
     };
   }
 
   get available() {
     return this.bridgeLimit === null || this.bridgeBalance === null
       ? null
-      : this.bridgeLimit - this.bridgeBalance;
+      : fixedNumberOperate('-', this.bridgeLimit, this.bridgeBalance);
   }
 }

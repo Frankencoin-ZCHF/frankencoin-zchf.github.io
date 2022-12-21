@@ -26,13 +26,15 @@ class PositionsRepository extends Repository {
   }
 
   getAllPositions() {
-    return this
-    // if we remove our own position, 'all' is not correct
-    //return this.where('ownerAddress', (value) => {
-    //  return value != this.auth.wallet;
-    // })
-      .with('collateral')
-      .get();
+    return (
+      this
+        // if we remove our own position, 'all' is not correct
+        //return this.where('ownerAddress', (value) => {
+        //  return value != this.auth.wallet;
+        // })
+        .with('collateral')
+        .get()
+    );
   }
 }
 

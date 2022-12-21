@@ -6,10 +6,10 @@ import useUsersRepository from '@/repositories/useUsersRepository';
 
 import useMintingHubFetcher from '@/fetchers/useMintingHubFetcher';
 
-import { dec18ToFloat } from '@/utils/math';
 import { dateFormatter } from '@/utils/date';
 import { addressCompare } from '@/utils/helpers';
 import fetchInfura from '@/utils/infura';
+import { dec18ToString } from '../utils/math';
 
 export default () => {
   const challengesRepository = useChallengesRepository();
@@ -42,8 +42,8 @@ export default () => {
 
       challengesRepository.save({
         index,
-        size: dec18ToFloat(challenge.size),
-        bid: dec18ToFloat(challenge.bid),
+        size: dec18ToString(challenge.size),
+        bid: dec18ToString(challenge.bid),
         end: dateFormatter(challenge.end),
         bidderAddress: ethers.utils.getAddress(challenge.bidder),
         challengerAddress: ethers.utils.getAddress(challenge.challenger),

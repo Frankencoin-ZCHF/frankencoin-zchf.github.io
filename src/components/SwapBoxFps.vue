@@ -1,7 +1,7 @@
 <template>
-  <AppForm>
+  <AppForm class="space-y-4">
     <SwapFieldInput
-      v-model.number="amount"
+      v-model="amount"
       :max="from.max"
       :fromWallet="true"
       :symbol="from.symbol"
@@ -10,7 +10,7 @@
       :limitLabel="limitLabel"
     />
 
-    <div class="pt-4 text-center">
+    <div class="text-center">
       <AppButton
         :class="{ 'rotate-180': isReversed }"
         tag="button"
@@ -29,6 +29,7 @@
       :max="to.max"
       :fromWallet="true"
       :symbol="to.symbol"
+      class
     />
 
     <div
@@ -59,20 +60,20 @@ import fpsToZchf from '@/transactions/fpsToZchf';
 import calculateFpsFromZchf from '@/transactions/calculateFpsFromZchf';
 import calculateZchfFromFps from '@/transactions/calculateZchfFromFps';
 
-import { formatCurrency } from '@/utils/formatNumber';
+import { fixedNumberOperate, bigNumberCompare } from '@/utils/math';
 
 const equity = inject('equity');
 const auth = inject('auth');
 const reload = inject('reload');
 
-const amount = ref(0);
-const result = ref(0);
+const amount = ref('0');
+const result = ref('0');
 
 const pending = ref(false);
 const conversionNote = ref(null);
 
 const loading = computed(() => false);
-const disabled = computed(() => !amount.value);
+const disabled = computed(() => !parseFloat(amount.value));
 
 const wrongChain = computed(() => auth.chainId != blockchain.targetChainId);
 
@@ -91,7 +92,7 @@ const currencyA = ref({
     pending.value = false;
 
     if (!tx.error) {
-      amount.value = 0;
+      amount.value = '0';
       await reload();
     }
   },
@@ -112,7 +113,7 @@ const currencyB = ref({
     pending.value = false;
 
     if (!tx.error) {
-      amount.value = 0;
+      amount.value = '0';
       await reload();
     }
   },
@@ -126,17 +127,17 @@ const { from, to, isReversed, switchDirection } = useSwapBox({
 });
 
 const error = computed(() => {
-  if (amount.value < 0) {
+  if (bigNumberCompare('<', amount.value, 0)) {
     return {
       message: 'Cannot swap a negative amount.',
       blockCalculation: true,
     };
-  } else if (isReversed.value && amount.value > equity.value.totalSupply - 1) {
+  } else if (limitReached.value) {
     return {
       message: 'Reserve capacity exceeded.',
       blockCalculation: true,
     };
-  } else if (amount.value > from.value.max) {
+  } else if (bigNumberCompare('>', amount.value, from.value.max)) {
     return {
       message: `Not enough ${from.value.symbol} in your wallet.`,
     };
@@ -160,18 +161,22 @@ const { calculate, isCalculating } = useCalculate({
 });
 
 const updateConversionNote = () => {
-  if (result.value && amount.value && !error.value?.blockCalculation) {
-    let ratio = 0;
+  if (
+    !bigNumberCompare('=', result.value, 0) &&
+    !bigNumberCompare('=', amount.value, 0) &&
+    parseFloat(amount.value) &&
+    parseFloat(result.value) &&
+    !error.value?.blockCalculation
+  ) {
+    let ratio = '0';
 
     if (isReversed.value) {
-      ratio = result.value / amount.value;
+      ratio = fixedNumberOperate('/', result.value, amount.value);
     } else {
-      ratio = amount.value / result.value;
+      ratio = fixedNumberOperate('/', amount.value, result.value);
     }
 
-    conversionNote.value = `1 ${currencyB.value.symbol} = ${formatCurrency(
-      ratio
-    )} ${currencyA.value.symbol}`;
+    conversionNote.value = `1 ${currencyB.value.symbol} = ${ratio} ${currencyA.value.symbol}`;
   } else {
     conversionNote.value = 'FPS price is dynamically calculated';
   }
@@ -185,7 +190,11 @@ watch([loading, isCalculating, amount, isReversed], () => {
 updateConversionNote();
 
 const limit = computed(() =>
-  isReversed.value ? equity.value.totalSupply - 1 : null
+  isReversed.value ? fixedNumberOperate('-', equity.value.totalSupply, 1) : null
+);
+
+const limitReached = computed(() =>
+  isReversed.value ? bigNumberCompare('>', amount.value, limit.value) : false
 );
 
 const limitLabel = computed(() =>

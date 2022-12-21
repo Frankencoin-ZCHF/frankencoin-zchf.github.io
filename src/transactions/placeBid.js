@@ -1,5 +1,5 @@
 import { MINTINGHUB_ABI, addresses } from '@/contracts/dictionnary';
-import { floatToDec18 } from '@/utils/math';
+import { stringToDec18 } from '@/utils/math';
 
 import config from '@/config';
 
@@ -12,8 +12,8 @@ export default async (challengeNumber, amount, size) => {
   const { addNotification } = useNotification();
   const { contract } = useContract(addresses.mintingHub, MINTINGHUB_ABI);
 
-  const dAmount = floatToDec18(amount.value);
-  const dSize = floatToDec18(size);
+  const dAmount = stringToDec18(amount.value);
+  const dSize = stringToDec18(size);
 
   const transaction = async () =>
     await contract.bid(challengeNumber, dAmount, dSize);

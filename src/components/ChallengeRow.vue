@@ -20,18 +20,22 @@
           <DisplayAmount
             :inline="true"
             :amount="challenge.bid"
-            :currency="challenge.position.collateral.symbol"
-            :currencyAddress="challenge.position.collateral.address"
+            :currency="frankencoin.symbol"
+            :currencyAddress="frankencoin.address"
           />
-          <div class="text-sm" v-if="challenge.ratio > 0">
-            {{ challenge.position.collateral.price }}
-            1 {{ challenge.position.collateral.symbol }} =
-
+          <div class="text-sm" v-if="bigNumberCompare('>', challenge.ratio, 0)">
+            <DisplayAmount
+              :inline="true"
+              :amount="1"
+              :currency="challenge.position.collateral.symbol"
+              :bold="false"
+            />
+            =
             <DisplayAmount
               :inline="true"
               :amount="challenge.ratio"
-              currency="ZCHF"
-              :currencyAddress="challenge.position.collateral.address"
+              :currency="frankencoin.symbol"
+              :bold="false"
             />
           </div>
         </div>
@@ -107,8 +111,11 @@ import AppButton from '@/components/AppButton.vue';
 import DisplayAmount from '@/components/DisplayAmount.vue';
 import ChallengeState from '@/components/ChallengeState.vue';
 
+import { bigNumberCompare } from '@/utils/math';
+
 const auth = inject('auth');
 const reload = inject('reload');
+const frankencoin = inject('frankencoin');
 
 const pending = ref(false);
 

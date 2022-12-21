@@ -70,8 +70,8 @@ class UsersRepository extends Repository {
     await Promise.all(
       collaterals.map(async (collateral) => {
         const collateralFetcher = useCollateralFetcher(collateral.address);
-        const ballance = await collateralFetcher.getBalance(address);
-        this.setToken(address, collateral.address, collateral.symbol, ballance);
+        const balance = await collateralFetcher.getBalance(address);
+        this.setToken(address, collateral.address, collateral.symbol, balance);
       })
     );
 

@@ -11,7 +11,7 @@
         <div class="space-y-12">
           <div class="space-y-4">
             <SwapFieldInput
-              v-model.number="amount"
+              v-model="amount"
               label="Your bid"
               :max="maxAmount"
               :customMaxAmount="auth.user.ZCHF"
@@ -19,9 +19,25 @@
               symbol="ZCHF"
             />
             <div class="flex flex-col gap-1">
-              <span
-                >1 {{ position.collateral.symbol }} = {{ bidRatio }} ZCHF</span
-              >
+              <span>
+                <DisplayAmount
+                  :amount="1"
+                  :currency="position.collateral.symbol"
+                  :currencyAddress="position.collateral.address"
+                  :bold="false"
+                  :noRounding="true"
+                  inline
+                />
+                =
+                <DisplayAmount
+                  :amount="bidRatio"
+                  :currency="frankencoin.symbol"
+                  :currencyAddress="frankencoin.address"
+                  :bold="false"
+                  :noRounding="true"
+                  inline
+                />
+              </span>
               <span class="text-sm">
                 If there is a higher bid your ZCHF go back to your wallet.
               </span>
@@ -33,50 +49,40 @@
               <div class="flex-1">
                 <span class="font-bold">Auctionned Collateral</span>
               </div>
-              <div>
-                {{ formatCurrency(challenge.size) }}
-                <AppButton
-                  tag="a"
-                  :link="true"
-                  target="_blank"
-                  :href="contractUrl(position.collateral.address)"
-                >
-                  {{ position.collateral.symbol }}
-                </AppButton>
+              <div class="font-bold">
+                <DisplayAmount
+                  :amount="challenge.size"
+                  :currency="position.collateral.symbol"
+                  :currencyAddress="position.collateral.address"
+                  :bold="false"
+                  inline
+                />
               </div>
             </div>
 
             <div class="flex">
               <div class="flex-1">Buy now price</div>
-              <div>
-                {{ formatCurrency(buyNowPrice) }}
-                <AppButton
-                  tag="a"
-                  :link="true"
-                  target="_blank"
-                  :href="contractUrl(frankencoin.address)"
-                >
-                  zCHF
-                </AppButton>
-              </div>
+              <DisplayAmount
+                :amount="buyNowPrice"
+                :currency="frankencoin.symbol"
+                :currencyAddress="frankencoin.address"
+                :bold="false"
+                inline
+              />
             </div>
 
             <div class="flex">
               <div class="flex-1">Highest bid</div>
-              <div>
-                {{ formatCurrency(challenge.bid) }}
-                <AppButton
-                  tag="a"
-                  :link="true"
-                  target="_blank"
-                  :href="contractUrl(frankencoin.address)"
-                >
-                  zCHF
-                </AppButton>
-              </div>
+              <DisplayAmount
+                :amount="challenge.bid"
+                :currency="frankencoin.symbol"
+                :currencyAddress="frankencoin.address"
+                :bold="false"
+                inline
+              />
             </div>
 
-            <div class="flex" v-if="challenge.bid > 0">
+            <div class="flex" v-if="bigNumberCompare('>', challenge.bid, 0)">
               <div class="flex-1">Current bidder</div>
               <AppButton
                 tag="a"
@@ -127,7 +133,6 @@ import { useRoute } from 'vue-router';
 import { addresses } from '@/contracts/dictionnary';
 
 import { contractUrl, shortenAddress } from '@/utils/address';
-import { formatCurrency } from '@/utils/formatNumber';
 import { durationFormatter } from '@/utils/date';
 
 import allowZchf from '@/transactions/allowZchf';
@@ -143,6 +148,13 @@ import AppForm from '@/components/AppForm.vue';
 import AppButton from '@/components/AppButton.vue';
 import SwapFieldInput from '@/components/SwapFieldInput.vue';
 import ChallengeExpiration from '@/components/ChallengeExpiration.vue';
+import DisplayAmount from '@/components/DisplayAmount.vue';
+
+import {
+  bigNumberCompare,
+  fixedNumberOperate,
+  bigNumberMin,
+} from '@/utils/math';
 
 const auth = inject('auth');
 const reload = inject('reload');
@@ -159,12 +171,14 @@ const UsersRepository = useUsersRepository();
 const challenge = computed(() => challengesRepository.getByIndex(index));
 const position = computed(() => challenge.value.position);
 
-const disabled = computed(() => !amount.value);
+const disabled = computed(() => !parseFloat(amount.value));
 
 const allowed = computed(() => {
   const allowedAmount = auth.user.ZCHFMintingHubAllowance;
 
-  return amount.value ? allowedAmount >= amount.value : allowedAmount > 0;
+  return amount.value
+    ? bigNumberCompare('>=', allowedAmount, amount.value)
+    : bigNumberCompare('>', allowedAmount, 0);
 });
 
 const amount = ref();
@@ -172,17 +186,21 @@ const amount = ref();
 const pending = ref(false);
 
 const buyNowPrice = computed(() => {
-  if (!challenge.value.size) {
-    return 0;
+  if (!parseFloat(challenge.value.size)) {
+    return '0';
   } else {
-    return position.value.price * challenge.value.size;
+    return fixedNumberOperate('*', position.value.price, challenge.value.size);
   }
 });
 
-const maxAmount = computed(() => Math.min(auth.user.ZCHF, buyNowPrice.value));
+const maxAmount = computed(() =>
+  bigNumberMin(auth.user.ZCHF, buyNowPrice.value)
+);
 
-const bidRatio = computed(
-  () => formatCurrency(amount.value / challenge.value.size) || 0
+const bidRatio = computed(() =>
+  disabled.value
+    ? '0'
+    : fixedNumberOperate('/', amount.value, challenge.value.size)
 );
 
 const duration = computed(() =>
@@ -190,11 +208,11 @@ const duration = computed(() =>
 );
 
 const error = computed(() => {
-  if (amount.value < 0) {
+  if (bigNumberCompare('<', amount.value, 0)) {
     return {
       message: 'Cannot place a bid with a negative amount.',
     };
-  } else if (amount.value > buyNowPrice.value) {
+  } else if (bigNumberCompare('>', amount.value, buyNowPrice.value)) {
     return {
       message: 'Cannot be higher than buy now price',
     };
@@ -202,7 +220,7 @@ const error = computed(() => {
     return {
       message: 'Cannot bid on non existing challenge',
     };
-  } else if (amount.value > auth.user.ZCHF) {
+  } else if (bigNumberCompare('>', amount.value, auth.user.ZCHF)) {
     return {
       message: 'Insufficient ZCHF amount in wallet',
     };
@@ -213,7 +231,7 @@ const error = computed(() => {
 
 const allow = async () => {
   pending.value = true;
-  const amountToApprove = 20000000000000;
+  const amountToApprove = '2000000';
 
   await allowZchf(addresses.mintingHub, amountToApprove);
 

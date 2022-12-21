@@ -14,7 +14,7 @@
           <AppButton secondary full @click="handleClick('metamask')">
             <span class="flex gap-4">
               <img src="/icons/metamask.svg" class="h-5 w-5" />
-              metamask
+              Metamask
             </span>
           </AppButton>
 

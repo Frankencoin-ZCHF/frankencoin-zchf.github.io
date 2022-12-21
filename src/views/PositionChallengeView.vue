@@ -1,6 +1,6 @@
 <template>
   <AppPageHeader
-    subtitle="Place Challenge"
+    title="Place Challenge"
     backText="Back to position"
     :backTo="'/position/detail/' + address"
   />
@@ -10,38 +10,53 @@
     <AppBox>
       <AppForm v-if="!loading">
         <SwapFieldInput
-          v-model.number="amount"
+          v-model="amount"
           label="Amount"
           :max="maxAmount"
-          :customMaxAmount="
-            auth.user.tokens[position.collateralAddress]?.amount
-          "
-          :showWallet="true"
+          :customMaxAmount="customMaxAmount"
+          :fromWallet="maxLimitFromWallet"
           :symbol="position.collateral.symbol"
         />
         <div class="my-8 flex flex-col gap-2">
 
           <div class="flex">
-            <div class="flex-1">Auction duration</div>
-            <div>{{ challengeDuration }}</div>
-          </div>
-
-          <div class="flex">
-            <div class="flex-1">'Buy now' price</div>
-            <div>{{ formatCurrency(position.price) }} ZCHF</div>
+            <div class="flex-1">Buy now price</div>
+            <DisplayAmount
+              :amount="position.price"
+              :currency="frankencoin.symbol"
+              :currencyAddress="frankencoin.address"
+              :bold="false"
+              inline
+            />
           </div>
 
           <div class="flex">
             <div class="flex-1">Collateral in position</div>
-            <div>
-              {{ position.collateralBalance }}
-              {{ position.collateral.symbol }}
-            </div>
+            <DisplayAmount
+              :amount="position.collateralBalance"
+              :currency="position.collateral.symbol"
+              :currencyAddress="position.collateral.address"
+              :bold="false"
+              inline
+            />
           </div>
 
           <div class="flex">
-            <div class="flex-1">Reward</div>
-            <div>{{ amount ? formatCurrency(0.02 * amount * position.price) + ' ZCHF' : '2%' }}</div>
+            <div class="flex-1">Maximum bid</div>
+            <DisplayAmount
+              :amount="maximumBid"
+              :currency="frankencoin.symbol"
+              :currencyAddress="frankencoin.address"
+              :bold="false"
+              inline
+            />
+          </div>
+
+          <div class="flex">
+            <div class="flex-1">
+              <span class="font-bold">Auction duration</span>
+            </div>
+            <div>{{ challengeDuration }}</div>
           </div>
 
           <div class="mt-4 text-sm">
@@ -67,9 +82,14 @@
 import { ref, computed, inject, provide } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
-import { formatCurrency } from '@/utils/formatNumber';
 import { durationFormatter } from '@/utils/date';
 import { addresses } from '@/contracts/dictionnary';
+
+import {
+  bigNumberMin,
+  bigNumberCompare,
+  fixedNumberOperate,
+} from '@/utils/math';
 
 import collateralApprove from '@/transactions/collateralApprove';
 import launchChallenge from '@/transactions/launchChallenge';
@@ -82,10 +102,12 @@ import AppBox from '@/components/AppBox.vue';
 import AppLoading from '@/components/AppLoading.vue';
 import AppForm from '@/components/AppForm.vue';
 import SwapFieldInput from '@/components/SwapFieldInput.vue';
+import DisplayAmount from '@/components/DisplayAmount.vue';
 
 const auth = inject('auth');
 const reload = inject('reload');
 const loading = inject('loading');
+const frankencoin = inject('frankencoin');
 
 const router = useRouter();
 const route = useRoute();
@@ -99,24 +121,40 @@ const position = computed(() => positionsRepository.getOne(address));
 const amount = ref();
 
 const maxAmount = computed(() =>
-  Math.min(
+  bigNumberMin(
     position.value.collateralBalance,
     auth.user.tokens[position.value.collateralAddress]?.amount
   )
 );
 
-const disabled = computed(() => !amount.value);
+const maxLimitFromWallet = computed(() =>
+  bigNumberCompare(
+    '>',
+    position.value.collateralBalance,
+    auth.user.tokens[position.value.collateralAddress]?.amount
+  )
+);
+
+const customMaxAmount = computed(
+  () => auth.user.tokens[position.value.collateralAddress]?.amount
+);
+
+const disabled = computed(() => !parseFloat(amount.value));
 
 const allowed = computed(() => {
   const allowedAmount = position.value.collateral.allowedAmountMintingHub;
 
-  return amount.value ? allowedAmount >= amount.value : allowedAmount > 0;
+  return amount.value
+    ? bigNumberCompare('>=', allowedAmount, amount.value)
+    : bigNumberCompare('>', allowedAmount, 0);
 });
 
 const pending = ref(false);
 
 const maximumBid = computed(() =>
-  !amount.value ? 0 : formatCurrency(position.value.price * amount.value)
+  disabled.value
+    ? '0'
+    : fixedNumberOperate('*', position.value.price, amount.value)
 );
 
 const challengeDuration = computed(() =>
@@ -124,11 +162,13 @@ const challengeDuration = computed(() =>
 );
 
 const error = computed(() => {
-  if (amount.value < 0) {
+  if (bigNumberCompare('<', amount.value, 0)) {
     return {
       message: 'Cannot use a negative amount.',
     };
-  } else if (amount.value > position.value.collateralBalance) {
+  } else if (
+    bigNumberCompare('>', amount.value, position.value.collateralBalance)
+  ) {
     return {
       message:
         'Challenge collateral should not be larger than position collateral.',
@@ -140,7 +180,7 @@ const error = computed(() => {
 
 const allow = async () => {
   pending.value = true;
-  const amountToApprove = 20000000000000;
+  const amountToApprove = '2000000';
 
   await collateralApprove(
     position.value.collateral.address,

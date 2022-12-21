@@ -9,16 +9,17 @@
       class="px-3 py-2 font-bold transition-opacity"
       :class="{ 'opacity-50': isCalculating }"
     >
-      {{ formatCurrency(result, false) }}
+      {{ output }}
     </div>
   </SwapField>
 </template>
 
 <script setup>
-import { formatCurrency } from '@/utils/formatNumber';
+import { computed } from 'vue';
+
 import SwapField from '@/components/SwapField.vue';
 
-defineProps({
+const props = defineProps({
   result: [Number, String],
   isCalculating: Boolean,
   note: String,
@@ -31,4 +32,6 @@ defineProps({
     default: true,
   },
 });
+
+const output = computed(() => (props.result ? props.result : '0'));
 </script>

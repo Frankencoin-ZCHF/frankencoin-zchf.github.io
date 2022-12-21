@@ -1,24 +1,28 @@
 import { STABLECOINBRIDGE_ABI, addresses } from '@/contracts/dictionnary';
+import config from '@/config';
 import useContract from '@/composables/useContract';
 import useNotification from '@/composables/useNotification';
 import useTransaction from '@/composables/useTransaction';
-import { floatToDec18 } from '@/utils/math';
+import { stringToDec18 } from '@/utils/math';
 
 export default async (amount) => {
   const { executeTransaction } = useTransaction();
   const { addNotification } = useNotification();
   const { contract } = useContract(addresses.bridge, STABLECOINBRIDGE_ABI);
 
-  const dAmount = floatToDec18(amount.value);
+  const dAmount = stringToDec18(amount.value);
 
   const transaction = async () => await contract['burn(uint256)'](dAmount);
+  const tx = await executeTransaction(transaction);
 
-  const callback = () => {
+  if (!tx.error) {
     addNotification({
       type: 'success',
-      title: `Minted ${amount.value} XCHF`,
+      title: `+ ${amount.value} ZCHF`,
+      linkUrl: `${config.etherscanUrl}/tx/${tx.hash}`,
+      linkLabel: 'See transaction',
     });
-  };
+  }
 
-  return await executeTransaction(transaction, callback);
+  return tx;
 };

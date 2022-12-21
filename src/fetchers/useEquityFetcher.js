@@ -1,6 +1,6 @@
 import { EQUITY_ABI, addresses } from '@/contracts/dictionnary';
 import useFetcher from '@/composables/useFetcher';
-import { floatToDec18 } from '@/utils/math';
+import { stringToDec18 } from '@/utils/math';
 
 export default () => {
   const fetcher = useFetcher(addresses.equity, EQUITY_ABI);
@@ -33,7 +33,7 @@ export default () => {
   };
 
   const calculateProceeds = async (amount) => {
-    const dAmount = floatToDec18(amount.value);
+    const dAmount = stringToDec18(amount.value);
     return await fetcher.one(
       {
         method: 'calculateProceeds',
@@ -45,7 +45,7 @@ export default () => {
   };
 
   const calculateShares = async (amount) => {
-    const dAmount = floatToDec18(amount.value);
+    const dAmount = stringToDec18(amount.value);
     return await fetcher.one(
       {
         method: 'calculateShares',

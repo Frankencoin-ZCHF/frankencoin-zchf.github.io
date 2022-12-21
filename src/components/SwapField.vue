@@ -13,7 +13,7 @@
       >
         <div v-if="hasMax && !hideMaxLabel" class="flex items-center gap-2">
           <AppIcon icon="Wallet" size="small" v-if="fromWallet" />
-          {{ formatCurrency(max, 4) }}
+          {{ formatCommify(max) }}
           {{ symbol }}
         </div>
 
@@ -39,7 +39,7 @@
 
 <script setup>
 import { computed, inject } from 'vue';
-import { formatCurrency } from '@/utils/formatNumber';
+import { formatCommify } from '@/utils/formatNumber';
 import AppIcon from '@/components/AppIcon.vue';
 
 const emit = defineEmits(['setMax']);
@@ -51,7 +51,7 @@ const props = defineProps({
   label: String,
   test: String,
   symbol: String,
-  max: Number,
+  max: [Number, String],
   note: String,
   fromWallet: Boolean,
   clickableMax: Boolean,

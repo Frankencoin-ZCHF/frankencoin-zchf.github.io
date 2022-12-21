@@ -3,9 +3,9 @@
 
   <section class="mx-auto flex max-w-2xl flex-col gap-y-4 px-4 sm:px-8">
     <AppBox>
-      <AppForm v-if="!loading">
+      <AppForm class="space-y-4" v-if="!loading">
         <SwapFieldInput
-          v-model.number="amount"
+          v-model="amount"
           :max="from.max"
           :symbol="from.symbol"
           :limit="swapLimit"
@@ -59,6 +59,8 @@ import AppPageHeader from '@/components/AppPageHeader.vue';
 import AppBox from '@/components/AppBox.vue';
 import AppForm from '@/components/AppForm.vue';
 
+import { bigNumberCompare } from '@/utils/math';
+
 const stablecoin = inject('stablecoin');
 const auth = inject('auth');
 const reload = inject('reload');
@@ -66,17 +68,25 @@ const loading = inject('loading');
 
 const UsersRepository = useUsersRepository();
 
-const amount = ref(0);
+const amount = ref();
 
 const result = computed(() => amount.value);
 
-const disabled = computed(() => !amount.value);
+const disabled = computed(() => !parseFloat(amount.value));
 
 const pending = ref(false);
 
-const allowed = computed(() =>
-  isReversed.value ? true : auth.user.XCHFBridgeAllowance > amount.value
-);
+const allowed = computed(() => {
+  const allowedAmount = auth.user.XCHFBridgeAllowance;
+
+  if (isReversed.value) {
+    return disabled.value
+      ? bigNumberCompare('>', allowedAmount, 0)
+      : bigNumberCompare('>=', auth.user.XCHFBridgeAllowance, amount.value);
+  } else {
+    return true;
+  }
+});
 
 const conversionNote = computed(() => {
   return `1 ${from.value.symbol} = 1 ${to.value.symbol}`;
@@ -95,13 +105,14 @@ const currencyA = ref({
   transaction: async () => {
     pending.value = true;
 
-    await mintZchf(amount);
+    const tx = await mintZchf(amount);
 
     pending.value = false;
 
-    amount.value = 0;
-
-    reload();
+    if (!tx.error) {
+      amount.value = '0';
+      await reload();
+    }
   },
 });
 
@@ -114,13 +125,14 @@ const currencyB = ref({
   transaction: async () => {
     pending.value = true;
 
-    await mintXchf(amount);
+    const tx = await mintXchf(amount);
 
     pending.value = false;
 
-    amount.value = 0;
-
-    reload();
+    if (!tx.error) {
+      amount.value = '0';
+      await reload();
+    }
   },
 });
 
@@ -131,15 +143,15 @@ const { from, to, isReversed, switchDirection } = useSwapBox({
 });
 
 const error = computed(() => {
-  if (amount.value < 0) {
+  if (bigNumberCompare('<', amount.value, 0)) {
     return {
       message: 'Cannot swap a negative amount.',
     };
-  } else if (amount.value > from.value.max) {
+  } else if (bigNumberCompare('>', amount.value, from.value.max)) {
     return {
       message: `Not enough ${from.value.symbol} in your wallet.`,
     };
-  } else if (amount.value > swapLimit.value) {
+  } else if (bigNumberCompare('>', amount.value, swapLimit.value)) {
     return {
       message: `Not enough ${to.value.symbol} available to swap.`,
     };
@@ -150,7 +162,7 @@ const error = computed(() => {
 
 const allow = async () => {
   pending.value = true;
-  const amountToApprove = 20000000000000;
+  const amountToApprove = '2000000';
 
   await allowXchf(addresses.bridge, amountToApprove);
 

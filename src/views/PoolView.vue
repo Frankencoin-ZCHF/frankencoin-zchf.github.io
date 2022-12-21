@@ -67,6 +67,7 @@
             <DisplayLabel label="Your shares">
               <DisplayAmount
                 :amount="auth.user.FPS"
+                :digits="5"
                 currency="FPS"
                 :currencyAddress="addresses.equity"
             /></DisplayLabel>
@@ -76,6 +77,7 @@
             <DisplayLabel label="Your shares value">
               <DisplayAmount
                 :amount="auth.user.FPSValue"
+                :digits="5"
                 currency="ZCHF"
                 :currencyAddress="addresses.frankencoin"
               />
@@ -84,7 +86,11 @@
 
           <AppBox class="flex-1">
             <DisplayLabel label="Voting Power">
-              <DisplayAmount :amount="auth.user.votingPower" currency="%" />
+              <DisplayAmount
+                :amount="auth.user.votingPower"
+                :digits="5"
+                currency="%"
+              />
             </DisplayLabel>
             <p>
               A minimum of 3% of the total supply is required to obtain veto

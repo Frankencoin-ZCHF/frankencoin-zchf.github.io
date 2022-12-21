@@ -8,7 +8,7 @@ export default ({ calcul, amount, result, blockCalculation }) => {
     isCalculating.value = true;
 
     if (blockCalculation.value) {
-      result.value = 0;
+      result.value = '0';
     } else {
       result.value = await calcul.value(amount);
     }

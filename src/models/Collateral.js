@@ -9,7 +9,7 @@ export default class Collateral extends Token {
     return {
       ...super.fields(),
 
-      allowedAmountMintingHub: this.number(null),
+      allowedAmountMintingHub: this.string(null),
       positions: this.hasMany(Position, 'collateralAddress'),
     };
   }
