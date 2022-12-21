@@ -24,7 +24,7 @@ export default () => {
 
       await walletProvider.enable();
     } else {
-      await ethereum.request({ method: 'eth_requestAccounts' });
+      await window.ethereum.request({ method: 'eth_requestAccounts' });
       walletProvider = await detectEthereumProvider();
     }
 
