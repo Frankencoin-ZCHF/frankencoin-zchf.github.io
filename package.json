@@ -12,7 +12,7 @@
     "test:e2e:ci": "start-server-and-test preview http://localhost:4173/ 'cypress run --e2e'",
     "build-only": "vite build",
     "storybook": "start-storybook -p 6006",
-    "validate": "npm-run-all eslint stylelint prettier --continue-on-error",
+    "validate": "npm-run-all eslint --continue-on-error",
     "fix": "npm-run-all eslint:fix stylelint:fix prettier:fix --continue-on-error",
     "eslint": "eslint . --ext .vue,.js --ignore-path .gitignore",
     "eslint:fix": "npm run eslint -- --fix",
