@@ -2,30 +2,32 @@
   <section class="mt-16 grid items-center gap-20 align-middle lg:grid-cols-5">
     <div class="lg:col-span-3">
       <h1 class="mb-12 text-right text-4xl font-bold">
-        Welcome to the
         <img class="" src="@/assets/logo.svg" />
       </h1>
 
       <p class="text-lg font-bold">
-        This website provides a frontend to the Frankencoin smart contracts that
-        reside on Ethereum mainnet. Both the website and the smart contracts
-        governing the Frankencoin are open source and can be freely copied for
+        This is a frontend to the Frankencoin smart contracts that
+        <a href="https://etherscan.io/address/0xB50808dEa4Dd28A336D69f4b70AA13c97364B3Fb#code">reside on the Ethereum mainnet</a>. Both the website and the smart contracts
+        governing the Frankencoin are <a href="https://github.com/frankencoin-zchf">open source</a> and can be freely copied for
         any purpose.
       </p>
-
       <p>
         The Frankencoin is a collateralized stablecoin that is intended to track
         the value of the Swiss Franc. It's governance is decentralized, with
         anyone being able to propose new minting mechanisms and anyone who
         contributed more than 3% to the stability reserve being able to veto new
-        minting mechanisms. It should be seen as experimental and not be relied
-        upon. The core ideas of the Frankencoin including a novel auction-based
-        minting mechanism are described in the Frankencoin research paper.
+        minting mechanisms. So far, the Frankencoin has two approved minting mechanism.
+        Both are accessible through this frontend. One is a simple swap contract
+        to convert XCHF into ZCHF and back. The other is a novel collateralized 
+        minting mechanism based on auctions. It has been described
+        in a <a href="https://www.snb.ch/n/mmr/reference/sem_2022_06_03_maire/source/sem_2022_06_03_maire.n.pdf">
+          slightly outdated research paper</a>.
         Unlike the minting mechanisms of other collateralized stablecoins,
         Frankencoin's auction-based mechanism does not depend on external
-        oracles and is therefore also very versatile with regards to the used
-        collateral, as long as its volatility with regards to the Swiss Franc is
-        limited.
+        oracles. It is very flexible with regards to the used collateral. In principle,
+        it supports any collateral with sufficient availability on the market.
+        However, its liquidation mechanism is slower than that of other collaterlized stablecoins,
+        making it less suitable for highly volatile types of collateral.
       </p>
 
       <p>
@@ -39,11 +41,22 @@
     </div>
   </section>
 
-  <div class="my-16 border-t border-b border-gray-200 bg-white py-5 uppercase">
+  <div class="mt-16 py-5 uppercase">
     <h2 class="text-center text-2xl font-bold">
-      Collateralized minting methods governed by a democratic process.
+      An Oracle-Free Collateralized Swiss Franc Stablecoin
     </h2>
   </div>
+  <section class="m-auto flex flex-col gap-2 mb-16">
+  <p class="text-lg font-bold">
+        WARNING: this is an alpha version. It has not been audited
+        and cannot be assumed to be safe. In its current state, you should not trust this project with your money.
+        Nonetheless, we are using real XCHF and real assets as collateral. Consider these a honey pot
+        to attract hackers. Please report issues with the
+        smart contracts <a href="https://github.com/Frankencoin-ZCHF/FrankenCoin/issues">here</a> 
+        and issues with the frontend <a href="https://github.com/Frankencoin-ZCHF/frankencoin-zchf.github.io/issues">here</a>
+        on github.
+      </p>
+  </section>
 
   <section class="m-auto flex flex-col gap-2">
     <h2 class="text-2xl font-bold">Frankencoin Contract</h2>
