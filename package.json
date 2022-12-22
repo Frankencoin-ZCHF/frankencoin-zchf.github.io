@@ -16,9 +16,9 @@
     "fix": "npm-run-all eslint:fix stylelint:fix prettier:fix --continue-on-error",
     "eslint": "eslint . --ext .vue,.js --ignore-path .gitignore",
     "eslint:fix": "npm run eslint -- --fix",
-    "stylelint": "stylelint '**/*.css'",
+    "stylelint": "stylelint **/*.css",
     "stylelint:fix": "npm run stylelint -- --fix",
-    "prettier": "prettier '**/!(README).(js|md|vue)' --list-different",
+    "prettier": "prettier \"**/!(README).(js|md|vue)\" --list-different",
     "prettier:fix": "npm run prettier -- --write"
   },
   "dependencies": {
