@@ -34,12 +34,8 @@
         principle, it supports any collateral with sufficient availability on
         the market. However, its liquidation mechanism is slower than that of
         other collaterlized stablecoins, making it less suitable for highly
-        volatile types of collateral.
-      </p>
-
-      <p>
-        The structure of the website follows the technical structure of the
-        smart contracts.
+        volatile types of collateral. The name is inspired by the
+        system's self-governing nature.
       </p>
     </div>
 
