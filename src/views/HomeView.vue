@@ -71,10 +71,15 @@
   </section>
 
   <section class="m-auto flex flex-col gap-2">
-    <h2 class="text-2xl font-bold">Frankencoin Contract</h2>
+    <h2 class="text-2xl font-bold">Frankencoin Token</h2>
     <p>
-      Frankencoin is a freely transferrable token that follows the ERC-20
-      standard. The name is inspired by its self-governing nature.
+      Frankencoin is a freely transferrable stablecoin that follows the ERC-20
+      standard. It can be minted by anyone who provides the necessary collateral.
+      Its peg to the Swiss franc is not technically enforced, but relies on the
+      economics of the system. In essence, the system is most valuable when the
+      Frankencoin tracks the value of the Swiss franc, so those who benefit from
+      the system being valuable have an incentive to make that happen. Those who
+      benefit are the holders of Frankencoin Pool Shares (FPS).
     </p>
 
     <div class="grid gap-1 lg:grid-cols-3">
@@ -153,16 +158,23 @@
 
     <hr class="my-12" />
 
-    <h2 class="text-2xl font-bold">Reserve Pool</h2>
+    <h2 class="text-2xl font-bold">Reserve Pool Shares</h2>
     <p>
-      The reserve pool contains Frankencoins. Its purpose is to absorbs losses
-      and accumulates income. Anyone can contribute ZCHF to the reserve pool,
-      getting freely transferrable pool shares in return. Pool shares can be
-      redeemed as long as the reserve target is met. Contributions and
-      redemptions are always done in proportion to the reserve. For example, if
-      the reserve contains 9900 ZCHF and you add 100 ZCHF, you will get 1% of
-      all reserve tokens in return, and vice versa when redeeming Frankencoin
-      Pool Shares (FPS).
+      The Frankencoin system receives income in the form of fees, and it can
+      incur losses in case a collateral proved to be insufficient. These go
+      into a reserve pool. If the 
+      Frankencoin system was a company, this reserve pool would be called
+      <em>equity</em>. It accumulates profits and absorbs losses. Anyone can
+      contribute to the reserve pool, thereby getting freshly minted Frankencoin
+      Pool Share (FPS) tokens. Anyone who held onto their FPS tokens for long
+      enough, namely at least 90 days, can also redeem them again against 
+      Frankencoins from the reserve pool at any time. If the Frankencoin's
+      equity has grown in the meantime, you will make a profit (and a loss
+      if it declined). Essentially, this is a system of continuous issuance
+      and redemption inspired by the idea of the <a href="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4189472">
+        Continuous Capital Corporation</a>. Holders of reserve pool shares 
+        enjoy veto power for new minting mechanisms as long as they have
+        at least 3% of the time-weighted outstanding shares.
     </p>
 
     <div class="grid gap-1 lg:grid-cols-3">
@@ -191,6 +203,7 @@
           <DisplayLabel label="Total Supply">
             <DisplayAmount
               :amount="equity.totalSupply"
+              currency=FPS
               :currencyAddress="equity.address"
               big
             />
@@ -198,8 +211,8 @@
         </AppBox>
 
         <AppBox>
-          <DisplayLabel label="Your FPS">
-            <DisplayAmount :amount="auth.user.FPS" big />
+          <DisplayLabel label="Your Balance">
+            <DisplayAmount :amount="auth.user.FPS" currency=FPS :currencyAddress="equity.address" big />
           </DisplayLabel>
         </AppBox>
 
@@ -236,14 +249,16 @@
 
     <hr class="my-12" />
 
-    <h2 class="text-2xl font-bold">Stablecoin Bridges</h2>
+    <h2 class="text-2xl font-bold">Stablecoin Conversion</h2>
     <p>
       Bridge contracts allow you to convert other Swiss Franc stablecoins 1:1
-      into ZCHF. The deposited stablecoins are kept in the bridge contract until
-      another user wants to convert ZCHF back into the resprective stablecoin.
+      into Frankencoins and also back again as long as there are some left. The
+      deposited stablecoins are kept in the bridge until another user wants
+      to convert ZCHF back into the resprective stablecoin.
+      For now, the only bridge is the one to the <a href="https://www.bitcoinsuisse.com/cryptofranc">Crypto Franc (XCHF)</a>.
     </p>
 
-    <h3 class="text-xl font-bold">CryptoFranc (XCHF)</h3>
+    <a href="http://localhost:5173/swap"><h3 class="text-xl font-bold">CryptoFranc (XCHF)</h3></a>
 
     <div class="grid gap-1 lg:grid-cols-3">
       <div class="grid gap-1 sm:grid-cols-2 lg:col-span-2">
@@ -258,7 +273,7 @@
         </AppBox>
 
         <AppBox>
-          <DisplayLabel label="Your XCHF">
+          <DisplayLabel label="Your Balance">
             <DisplayAmount
               :amount="auth.user.XCHF"
               :currency="stablecoin.symbol"
