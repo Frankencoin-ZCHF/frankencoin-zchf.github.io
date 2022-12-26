@@ -83,7 +83,7 @@ const conversionNote = computed(() => {
 });
 
 const swapLimit = computed(() =>
-  isReversed.value ? stablecoin.value.available : stablecoin.value.bridgeBalance
+  isReversed.value ? stablecoin.value.bridgeBalance : stablecoin.value.available
 );
 
 const currencyA = ref({
