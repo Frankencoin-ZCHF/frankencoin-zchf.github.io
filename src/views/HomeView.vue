@@ -252,6 +252,7 @@
             <DisplayAmount
               :amount="stablecoin.bridgeBalance"
               :currency="stablecoin.symbol"
+              :currencyAddress="stablecoin.address"
               big
             />
           </DisplayLabel>
@@ -262,6 +263,7 @@
             <DisplayAmount
               :amount="auth.user.XCHF"
               :currency="stablecoin.symbol"
+              :currencyAddress="stablecoin.address"
               big
             />
           </DisplayLabel>
