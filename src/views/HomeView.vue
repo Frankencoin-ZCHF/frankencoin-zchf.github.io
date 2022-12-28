@@ -247,7 +247,7 @@
 
     <h2 class="text-2xl font-bold">Stablecoin Conversion</h2>
     <p>
-      Bridge contracts allow you to convert other Swiss Franc stablecoins 1:1
+      Bridge contracts allow to convert other Swiss Franc stablecoins 1:1
       into Frankencoins and also back again as long as there are some left. The
       deposited stablecoins are kept in the bridge until another user wants
       to convert ZCHF back into the resprective stablecoin.
@@ -312,7 +312,7 @@
       ZCHF once the initialization period has passed. Positions that are not
       sufficiently collateralized can be challenged by anyone through an auction
       mechanism. When challenging a position, the challenger must provide some
-      of the collateral. If the highest bid in the subsequent auction is high
+      of the collateral to be auctioned off. If the highest bid in the subsequent auction is high
       enough to show that the position is sufficiently collateralized, the
       challenge is averted and the bidder gets the challengers collateral in
       exchange for the highest bid. If the highest bid is lower, the challenge
