@@ -27,7 +27,7 @@ const router = createRouter({
       name: 'swap',
       component: SwapView,
       meta: {
-        documentation: 'https://docs.frankencoin.com/',
+        documentation: 'https://docs.frankencoin.com/swap',
       },
     },
     {
@@ -35,7 +35,7 @@ const router = createRouter({
       name: 'positions',
       component: PositionsView,
       meta: {
-        documentation: 'https://docs.frankencoin.com/',
+        documentation: 'https://docs.frankencoin.com/positions',
       },
     },
     {
@@ -43,7 +43,7 @@ const router = createRouter({
       name: 'auctions',
       component: AuctionsView,
       meta: {
-        documentation: 'https://docs.frankencoin.com/',
+        documentation: 'https://docs.frankencoin.com/positions/auctions',
       },
     },
     {
@@ -51,7 +51,7 @@ const router = createRouter({
       name: 'pool',
       component: PoolView,
       meta: {
-        documentation: 'https://docs.frankencoin.com/',
+        documentation: 'https://docs.frankencoin.com/reserve',
       },
     },
     {
@@ -59,7 +59,7 @@ const router = createRouter({
       name: 'positionOpen',
       component: PositionOpenView,
       meta: {
-        documentation: 'https://docs.frankencoin.com/',
+        documentation: 'https://docs.frankencoin.com/positions/clone',
       },
     },
     {
@@ -67,7 +67,7 @@ const router = createRouter({
       name: 'positionAdjust',
       component: PositionAdjustView,
       meta: {
-        documentation: 'https://docs.frankencoin.com/',
+        documentation: 'https://docs.frankencoin.com/positions/adjust',
       },
     },
     {
@@ -75,7 +75,7 @@ const router = createRouter({
       name: 'positionDetail',
       component: PositionDetailView,
       meta: {
-        documentation: 'https://docs.frankencoin.com/',
+        documentation: 'https://docs.frankencoin.com/positions',
       },
     },
     {
@@ -83,7 +83,7 @@ const router = createRouter({
       name: 'positionChallenge',
       component: PositionChallengeView,
       meta: {
-        documentation: 'https://docs.frankencoin.com/',
+        documentation: 'https://docs.frankencoin.com/positions/auctions',
       },
     },
     {
@@ -91,7 +91,7 @@ const router = createRouter({
       name: 'positionPlaceBid',
       component: PositionPlaceBid,
       meta: {
-        documentation: 'https://docs.frankencoin.com/',
+        documentation: 'https://docs.frankencoin.com/positions/auctions',
       },
     },
   ],
