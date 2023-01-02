@@ -6,6 +6,7 @@
   />
 
   <section class="container m-auto max-w-2xl">
+    <AppPageHeader title="Launch a Challenge" />
     <AppBox>
       <AppForm v-if="!loading">
         <SwapFieldInput
@@ -19,8 +20,14 @@
           :symbol="position.collateral.symbol"
         />
         <div class="my-8 flex flex-col gap-2">
+
           <div class="flex">
-            <div class="flex-1">Buy now price</div>
+            <div class="flex-1">Auction duration</div>
+            <div>{{ challengeDuration }}</div>
+          </div>
+
+          <div class="flex">
+            <div class="flex-1">'Buy now' price</div>
             <div>{{ formatCurrency(position.price) }} ZCHF</div>
           </div>
 
@@ -33,33 +40,19 @@
           </div>
 
           <div class="flex">
-            <div class="flex-1">Maximum bid</div>
-            <div>{{ maximumBid }} ZCHF</div>
-          </div>
-
-          <div class="flex">
-            <div class="flex-1">
-              <span class="font-bold">Auction duration</span>
-            </div>
-            <div>{{ challengeDuration }}</div>
+            <div class="flex-1">Reward</div>
+            <div>{{ amount ? formatCurrency(0.02 * amount * position.price) + ' ZCHF' : '2%' }}</div>
           </div>
 
           <div class="mt-4 text-sm">
-            <p>The amount you provide will be auctioned publicly.</p>
-            <p>This results in the following scenarios for you:</p>
+            <p>The amount you provide will be publicly auctioned. There are two possible outcomes:</p>
 
             <ol class="flex flex-col gap-y-2 pl-6 [&>li]:list-decimal">
               <li>
-                If the liquidation price for your auction is reached, you get
-                your amount back and an additional reward.
+                Someone bids the 'buy now' price before the end of the auction. In that case, the bidder buys the amount of {{ position.collateral.symbol }} tokens you provided for {{ formatCurrency(position.price) }} ZCHF per unit.
               </li>
               <li>
-                If the minimum criteria for your auction aren’t met, you will
-                receive the highest bid on your amount.
-              </li>
-              <li>
-                If no bids are placed your challenge passes successfully and you
-                get your amount back and an additional reward.
+                The auction ends with the highest bids being below the 'buy now' price. In that case, you get your {{ position.collateral.symbol }} tokens back and the bidder gets to buy the same amount of {{ position.collateral.symbol }} tokens out of the position, with the proceeds being used for repayment. You get a reward.
               </li>
             </ol>
           </div>
