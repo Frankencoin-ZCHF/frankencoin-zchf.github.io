@@ -1,5 +1,5 @@
-import { EQUITY_ABI, addresses } from '@/contracts/dictionnary';
 import useFetcher from '@/composables/useFetcher';
+import { addresses, EQUITY_ABI } from '@/contracts/dictionnary';
 import { stringToDec18 } from '@/utils/math';
 
 export default () => {

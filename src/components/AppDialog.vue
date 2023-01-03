@@ -59,15 +59,15 @@
 </template>
 
 <script setup>
-import { inject } from 'vue';
+import AppButton from '@/components/AppButton.vue';
 import {
-  TransitionRoot,
-  TransitionChild,
   Dialog,
   DialogPanel,
   DialogTitle,
+  TransitionChild,
+  TransitionRoot,
 } from '@headlessui/vue';
-import AppButton from '@/components/AppButton.vue';
+import { inject } from 'vue';
 
 const { dialogs } = inject('dialog');
 

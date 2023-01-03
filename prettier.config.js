@@ -1,4 +1,22 @@
 module.exports = {
   singleQuote: true,
   trailingComma: 'es5',
+  importOrder: [
+    '^@auth',
+    '^@config',
+    '^@contracts/(.*)$',
+    '^@controllers/(.*)$',
+    '^@components/(.*)$',
+    '^@composables/(.*)$',
+    '^@fetchers/(.*)$',
+    '^@models/(.*)$',
+    '^@repositories/(.*)$',
+    '^@transactions/(.*)$',
+    '^@utils/(.*)$',
+    '^@views/(.*)$',
+    '^[./]',
+  ],
+  importOrderSeparation: true,
+  importOrderSortSpecifiers: true,
+  importOrderCaseInsensitive: true,
 };

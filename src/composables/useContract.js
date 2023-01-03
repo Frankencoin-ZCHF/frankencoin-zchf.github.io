@@ -1,8 +1,6 @@
-import { ethers } from 'ethers';
-
 import useAuth from '@/auth';
-
 import config from '@/config';
+import { ethers } from 'ethers';
 
 export default (address, abi) => {
   const auth = useAuth();

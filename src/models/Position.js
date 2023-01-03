@@ -1,11 +1,12 @@
-import { Model } from 'pinia-orm';
-import Collateral from './Collateral';
-import Challenge from './Challenge';
-import User from './User';
-import { dateFormatter } from '@/utils/date';
 import useAuth from '@/auth';
-import { fixedNumberOperate } from '../utils/math';
+import { dateFormatter } from '@/utils/date';
 import { addressCompare } from '@/utils/helpers';
+import { Model } from 'pinia-orm';
+
+import { fixedNumberOperate } from '../utils/math';
+import Challenge from './Challenge';
+import Collateral from './Collateral';
+import User from './User';
 
 export default class Position extends Model {
   static entity = 'positions';

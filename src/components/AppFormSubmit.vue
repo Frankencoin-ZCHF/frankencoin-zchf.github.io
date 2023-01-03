@@ -42,19 +42,19 @@
 </template>
 
 <script setup>
-import { inject } from 'vue';
-
 import useAuth from '@/auth';
-
-import useLoading from '@/composables/useLoading';
-
 import AppButton from '@/components/AppButton.vue';
+import useLoading from '@/composables/useLoading';
+import blockchain from '@/config';
+import { computed, inject } from 'vue';
 
 const auth = useAuth();
 const { openDialog } = inject('dialog');
 
+const wrongChain = computed(() => auth.chainId != blockchain.targetChainId);
+
 const needsAllowance = inject('needsAllowance', false);
-const disabled = inject('disabled');
+const disabled = inject('disabled') && wrongChain;
 const pending = inject('pending');
 const allowed = !needsAllowance ? true : inject('allowed');
 const error = inject('error');

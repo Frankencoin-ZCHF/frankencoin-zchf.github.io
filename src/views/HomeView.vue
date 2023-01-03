@@ -353,20 +353,16 @@
 </template>
 
 <script setup>
-import { inject } from 'vue';
-
-import { contractUrl, shortenAddress } from '@/utils/address.js';
-import { addresses } from '@/contracts/dictionnary';
-
 import useAuth from '@/auth';
-
-import PositionsView from '@/views/PositionsView.vue';
-
-import AppPageHeader from '@/components/AppPageHeader.vue';
-import AppButton from '@/components/AppButton.vue';
 import AppBox from '@/components/AppBox.vue';
-import DisplayLabel from '@/components/DisplayLabel.vue';
+import AppButton from '@/components/AppButton.vue';
+import AppPageHeader from '@/components/AppPageHeader.vue';
 import DisplayAmount from '@/components/DisplayAmount.vue';
+import DisplayLabel from '@/components/DisplayLabel.vue';
+import { addresses } from '@/contracts/dictionnary';
+import { contractUrl, shortenAddress } from '@/utils/address.js';
+import PositionsView from '@/views/PositionsView.vue';
+import { inject } from 'vue';
 
 const auth = useAuth();
 

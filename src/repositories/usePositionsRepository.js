@@ -1,6 +1,6 @@
-import { Repository, useRepo } from 'pinia-orm';
-import Position from '@/models/Position';
 import useAuth from '@/auth';
+import Position from '@/models/Position';
+import { Repository, useRepo } from 'pinia-orm';
 
 class PositionsRepository extends Repository {
   use = Position;

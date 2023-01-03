@@ -1,4 +1,5 @@
 import { Model } from 'pinia-orm';
+
 import { fixedNumberOperate } from '../utils/math';
 import Position from './Position';
 import User from './User';

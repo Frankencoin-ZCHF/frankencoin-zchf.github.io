@@ -1,9 +1,7 @@
-import { POSITION_ABI } from '@/contracts/dictionnary';
-
 import useContract from '@/composables/useContract';
 import useNotification from '@/composables/useNotification';
 import useTransaction from '@/composables/useTransaction';
-
+import { POSITION_ABI } from '@/contracts/dictionnary';
 import { stringToDec18 } from '@/utils/math';
 
 export default async (positionAddress, minted, collateral, price) => {

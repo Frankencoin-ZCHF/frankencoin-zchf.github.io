@@ -79,7 +79,9 @@
         full
         size="small"
         :loading="pending"
-        :disabled="!auth.isConnected"
+        :disabled="
+          !auth.isConnected || auth.chainId != blockchain.targetChainId
+        "
         @click="closeChallenge(challenge.index)"
       >
         Close
@@ -101,17 +103,15 @@
 </template>
 
 <script setup>
-import { computed, ref, inject } from 'vue';
-
-import endChallenge from '@/transactions/endChallenge';
-
-import AppTableRow from '@/components/AppTableRow.vue';
-import AppTableHeaderMobile from '@/components/AppTableHeaderMobile.vue';
 import AppButton from '@/components/AppButton.vue';
-import DisplayAmount from '@/components/DisplayAmount.vue';
+import AppTableHeaderMobile from '@/components/AppTableHeaderMobile.vue';
+import AppTableRow from '@/components/AppTableRow.vue';
 import ChallengeState from '@/components/ChallengeState.vue';
-
+import DisplayAmount from '@/components/DisplayAmount.vue';
+import blockchain from '@/config';
+import endChallenge from '@/transactions/endChallenge';
 import { bigNumberCompare } from '@/utils/math';
+import { computed, inject, ref } from 'vue';
 
 const auth = inject('auth');
 const reload = inject('reload');

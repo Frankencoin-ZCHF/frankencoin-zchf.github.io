@@ -1,5 +1,5 @@
-import { ethers } from 'ethers';
 import { formatCurrency } from '@/utils/formatNumber';
+import { ethers } from 'ethers';
 
 export const formatDecimals = (value) => {
   const formatted = value.endsWith('.0') ? value.replace('.0', '') : value;

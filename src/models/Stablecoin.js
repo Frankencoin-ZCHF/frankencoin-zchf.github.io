@@ -1,5 +1,6 @@
-import Token from './Token';
 import { fixedNumberOperate } from '@/utils/math';
+
+import Token from './Token';
 
 export default class Stablecoin extends Token {
   static entity = 'stablecoin';

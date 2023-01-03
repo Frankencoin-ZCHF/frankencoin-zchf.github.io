@@ -1,5 +1,5 @@
-import { POSITION_ABI } from '@/contracts/dictionnary';
 import useFetcher from '@/composables/useFetcher';
+import { POSITION_ABI } from '@/contracts/dictionnary';
 
 export default (address) => {
   const fetcher = useFetcher(address, POSITION_ABI);

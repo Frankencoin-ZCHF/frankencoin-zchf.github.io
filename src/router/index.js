@@ -1,15 +1,14 @@
-import { createRouter, createWebHistory } from 'vue-router';
-
-import SwapView from '@/views/SwapView.vue';
-import HomeView from '@/views/HomeView.vue';
-import PositionsView from '@/views/PositionsView.vue';
 import AuctionsView from '@/views/AuctionsView.vue';
+import HomeView from '@/views/HomeView.vue';
 import PoolView from '@/views/PoolView.vue';
-import PositionDetailView from '@/views/PositionDetailView.vue';
-import PositionOpenView from '@/views/PositionOpenView.vue';
 import PositionAdjustView from '@/views/PositionAdjustView.vue';
 import PositionChallengeView from '@/views/PositionChallengeView.vue';
+import PositionDetailView from '@/views/PositionDetailView.vue';
+import PositionOpenView from '@/views/PositionOpenView.vue';
 import PositionPlaceBid from '@/views/PositionPlaceBid.vue';
+import PositionsView from '@/views/PositionsView.vue';
+import SwapView from '@/views/SwapView.vue';
+import { createRouter, createWebHistory } from 'vue-router';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),

@@ -1,6 +1,5 @@
 import useNotification from '@/composables/useNotification';
 import useTransaction from '@/composables/useTransaction';
-
 import { stringToDec18 } from '@/utils/math';
 
 export default async (contract, spender, amount) => {

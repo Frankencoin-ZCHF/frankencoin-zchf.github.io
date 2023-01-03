@@ -1,5 +1,5 @@
-import AppNotificationsGroup from '../components/AppNotificationsGroup.vue';
 import AppButton from '../components/AppButton.vue';
+import AppNotificationsGroup from '../components/AppNotificationsGroup.vue';
 import useNotification from '../composables/useNotification';
 
 export default {

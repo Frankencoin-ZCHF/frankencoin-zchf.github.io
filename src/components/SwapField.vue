@@ -11,7 +11,10 @@
         @click="setMax()"
         v-if="auth.isConnected && symbol && hasMax && !loading"
       >
-        <div v-if="hasMax && !hideMaxLabel" class="flex items-center gap-2">
+        <div
+          v-if="hasMax && max && !hideMaxLabel"
+          class="flex items-center gap-2"
+        >
           <AppIcon icon="Wallet" size="small" v-if="fromWallet" />
           {{ formatCommify(max) }}
           {{ symbol }}
@@ -38,9 +41,9 @@
 </template>
 
 <script setup>
-import { computed, inject } from 'vue';
-import { formatCommify } from '@/utils/formatNumber';
 import AppIcon from '@/components/AppIcon.vue';
+import { formatCommify } from '@/utils/formatNumber';
+import { computed, inject } from 'vue';
 
 const emit = defineEmits(['setMax']);
 

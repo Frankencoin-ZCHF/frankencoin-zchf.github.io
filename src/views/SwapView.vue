@@ -40,26 +40,21 @@
 </template>
 
 <script setup>
-import { computed, ref, inject, provide } from 'vue';
-import { addresses } from '@/contracts/dictionnary';
-
-import useSwapBox from '@/composables/useSwapBox';
-
-import mintZchf from '@/transactions/mintZchf';
-import mintXchf from '@/transactions/mintXchf';
-import allowXchf from '@/transactions/allowXchf';
-
-import useUsersRepository from '@/repositories/useUsersRepository';
-
-import SwapFieldInput from '@/components/SwapFieldInput.vue';
-import SwapFieldOutput from '@/components/SwapFieldOutput.vue';
+import AppBox from '@/components/AppBox.vue';
 import AppButton from '@/components/AppButton.vue';
+import AppForm from '@/components/AppForm.vue';
 import AppLoading from '@/components/AppLoading.vue';
 import AppPageHeader from '@/components/AppPageHeader.vue';
-import AppBox from '@/components/AppBox.vue';
-import AppForm from '@/components/AppForm.vue';
-
+import SwapFieldInput from '@/components/SwapFieldInput.vue';
+import SwapFieldOutput from '@/components/SwapFieldOutput.vue';
+import useSwapBox from '@/composables/useSwapBox';
+import { addresses } from '@/contracts/dictionnary';
+import useUsersRepository from '@/repositories/useUsersRepository';
+import allowXchf from '@/transactions/allowXchf';
+import mintXchf from '@/transactions/mintXchf';
+import mintZchf from '@/transactions/mintZchf';
 import { bigNumberCompare } from '@/utils/math';
+import { computed, inject, provide, ref } from 'vue';
 
 const stablecoin = inject('stablecoin');
 const auth = inject('auth');

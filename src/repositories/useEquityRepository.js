@@ -1,8 +1,7 @@
-import { Repository, useRepo } from 'pinia-orm';
-import { ethers } from 'ethers';
 import { addresses } from '@/contracts/dictionnary';
-
 import Equity from '@/models/Equity';
+import { ethers } from 'ethers';
+import { Repository, useRepo } from 'pinia-orm';
 
 class EquityRepository extends Repository {
   use = Equity;

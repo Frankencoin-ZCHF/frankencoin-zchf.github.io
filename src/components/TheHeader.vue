@@ -96,12 +96,12 @@
 </template>
 
 <script setup>
-import { inject } from 'vue';
-import { useRoute } from 'vue-router';
-import WalletConnection from '@/components/WalletConnection.vue';
-import ChainChecker from '@/components/ChainChecker.vue';
 import AppButton from '@/components/AppButton.vue';
 import AppDialog from '@/components/AppDialog.vue';
+import ChainChecker from '@/components/ChainChecker.vue';
+import WalletConnection from '@/components/WalletConnection.vue';
+import { inject } from 'vue';
+import { useRoute } from 'vue-router';
 
 const { openDialog, closeDialog } = inject('dialog');
 const route = useRoute();

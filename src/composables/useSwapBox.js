@@ -1,4 +1,4 @@
-import { ref, computed } from 'vue';
+import { computed, ref } from 'vue';
 
 export default ({ currencyA, currencyB }) => {
   const isReversed = ref(false);

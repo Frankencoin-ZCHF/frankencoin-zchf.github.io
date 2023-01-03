@@ -1,10 +1,8 @@
-import { MINTINGHUB_ABI, addresses } from '@/contracts/dictionnary';
-
-import config from '@/config';
-
 import useContract from '@/composables/useContract';
 import useNotification from '@/composables/useNotification';
 import useTransaction from '@/composables/useTransaction';
+import config from '@/config';
+import { addresses, MINTINGHUB_ABI } from '@/contracts/dictionnary';
 
 export default async (index) => {
   const { executeTransaction } = useTransaction();

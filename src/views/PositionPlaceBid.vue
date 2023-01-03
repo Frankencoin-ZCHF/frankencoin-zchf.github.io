@@ -127,34 +127,28 @@
 </template>
 
 <script setup>
-import { ref, computed, provide, inject } from 'vue';
-import { useRoute } from 'vue-router';
-
-import { addresses } from '@/contracts/dictionnary';
-
-import { contractUrl, shortenAddress } from '@/utils/address';
-import { durationFormatter } from '@/utils/date';
-
-import allowZchf from '@/transactions/allowZchf';
-import placeBid from '@/transactions/placeBid';
-
-import useChallengesRepository from '@/repositories/useChallengesRepository';
-import useUsersRepository from '@/repositories/useUsersRepository';
-
-import AppPageHeader from '@/components/AppPageHeader.vue';
 import AppBox from '@/components/AppBox.vue';
-import AppLoading from '@/components/AppLoading.vue';
-import AppForm from '@/components/AppForm.vue';
 import AppButton from '@/components/AppButton.vue';
-import SwapFieldInput from '@/components/SwapFieldInput.vue';
+import AppForm from '@/components/AppForm.vue';
+import AppLoading from '@/components/AppLoading.vue';
+import AppPageHeader from '@/components/AppPageHeader.vue';
 import ChallengeExpiration from '@/components/ChallengeExpiration.vue';
 import DisplayAmount from '@/components/DisplayAmount.vue';
-
+import SwapFieldInput from '@/components/SwapFieldInput.vue';
+import { addresses } from '@/contracts/dictionnary';
+import useChallengesRepository from '@/repositories/useChallengesRepository';
+import useUsersRepository from '@/repositories/useUsersRepository';
+import allowZchf from '@/transactions/allowZchf';
+import placeBid from '@/transactions/placeBid';
+import { contractUrl, shortenAddress } from '@/utils/address';
+import { durationFormatter } from '@/utils/date';
 import {
   bigNumberCompare,
-  fixedNumberOperate,
   bigNumberMin,
+  fixedNumberOperate,
 } from '@/utils/math';
+import { computed, inject, provide, ref } from 'vue';
+import { useRoute } from 'vue-router';
 
 const auth = inject('auth');
 const reload = inject('reload');

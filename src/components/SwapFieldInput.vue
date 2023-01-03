@@ -11,18 +11,12 @@
     <div class="flex gap-1 rounded-lg bg-neutral-100 p-1">
       <input
         v-model="propModel"
-        type="number"
+        type="text"
+        pattern="[0-9]*(.[0-9]+)?"
         inputmode="decimal"
-        pattern="[0-9]"
         class="w-full flex-1 rounded-lg bg-transparent px-2 py-1 text-lg"
-        :class="{
-          'text-red': !!error,
-        }"
-        step="any"
-        :max="maxInput && max"
-        min="0"
+        :class="{ 'text-red': !!error }"
         :placeholder="placeholder"
-        ref="focusInput"
         @keyup="keyUpHandle($event)"
         @keydown="keyDownHandle($event)"
       />
@@ -42,28 +36,39 @@
 </template>
 
 <script setup>
-import { computed } from 'vue';
-import SwapField from '@/components/SwapField.vue';
 import AppButton from '@/components/AppButton.vue';
 import DisplayAmount from '@/components/DisplayAmount.vue';
-
-import { bigNumberMin } from '@/utils/math';
+import SwapField from '@/components/SwapField.vue';
 import { shrinkDecimals } from '@/utils/formatNumber';
+import { bigNumberMin } from '@/utils/math';
+import { computed } from 'vue';
 
 const emit = defineEmits(['update:modelValue']);
 
 const keyDownHandle = (event) => {
   const key = event.key;
-  const charCode = event.keyCode;
-  const prohibitedCharcodes = [189, 69, 190];
+  const keyCode = event.keyCode;
+
+  const allowedKeycodes = [8, 16, 37, 39, 190, 188];
+  const isAllowedKey = allowedKeycodes.includes(keyCode);
+  const isValidKey = /[0-9]|\./.test(key) || isAllowedKey;
+
   const inputValue = event.target.value;
-  const index = inputValue.indexOf('.');
-  const decimals = inputValue.substring(index + 1);
+  const pointPosition = inputValue.indexOf('.');
+
+  const decimals = inputValue.substring(pointPosition + 1);
   const decimalsLength = decimals.length + 1;
+  const tooManyDecimals = decimalsLength > 18;
+
+  if (keyCode === 188 && pointPosition < 0) {
+    emit('update:modelValue', `${inputValue}.`);
+    event.preventDefault();
+  }
 
   if (
-    prohibitedCharcodes.includes(charCode) ||
-    (decimalsLength > 18 && !isNaN(key))
+    !isValidKey ||
+    (tooManyDecimals && !isAllowedKey) ||
+    ((keyCode === 188 || keyCode === 190) && pointPosition > 0)
   ) {
     event.preventDefault();
   }

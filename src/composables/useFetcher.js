@@ -1,7 +1,7 @@
 import useContract from '@/composables/useContract';
 import useLoading from '@/composables/useLoading';
-import { dec18ToString } from '@/utils/math';
 import { dateFormatter } from '@/utils/date';
+import { dec18ToString } from '@/utils/math';
 import { ethers } from 'ethers';
 
 export default (address, abi) => {

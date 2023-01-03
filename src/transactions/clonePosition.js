@@ -1,12 +1,9 @@
-import { MINTINGHUB_ABI, addresses } from '@/contracts/dictionnary';
-
-import config from '@/config';
-import { shortenAddress } from '@/utils/address';
-
 import useContract from '@/composables/useContract';
 import useNotification from '@/composables/useNotification';
 import useTransaction from '@/composables/useTransaction';
-
+import config from '@/config';
+import { addresses, MINTINGHUB_ABI } from '@/contracts/dictionnary';
+import { shortenAddress } from '@/utils/address';
 import { stringToDec18 } from '@/utils/math';
 
 export default async (positionAddress, initialCollateral, initialMint) => {

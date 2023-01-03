@@ -151,24 +151,21 @@
 </template>
 
 <script setup>
-import { computed, inject } from 'vue';
-import { useRoute } from 'vue-router';
-import { addresses } from '@/contracts/dictionnary';
-
-import usePositionsRepository from '@/repositories/usePositionsRepository';
-import useChallengesRepository from '@/repositories/useChallengesRepository';
-
-import { shortenAddress, contractUrl } from '@/utils/address';
-
 import AppBox from '@/components/AppBox.vue';
-import AppPageHeader from '@/components/AppPageHeader.vue';
 import AppButton from '@/components/AppButton.vue';
 import AppLoading from '@/components/AppLoading.vue';
-import DisplayLabel from '@/components/DisplayLabel.vue';
-import DisplayAmount from '@/components/DisplayAmount.vue';
+import AppPageHeader from '@/components/AppPageHeader.vue';
 import AppTable from '@/components/AppTable.vue';
 import AppTableRow from '@/components/AppTableRow.vue';
 import ChallengeRow from '@/components/ChallengeRow.vue';
+import DisplayAmount from '@/components/DisplayAmount.vue';
+import DisplayLabel from '@/components/DisplayLabel.vue';
+import { addresses } from '@/contracts/dictionnary';
+import useChallengesRepository from '@/repositories/useChallengesRepository';
+import usePositionsRepository from '@/repositories/usePositionsRepository';
+import { contractUrl, shortenAddress } from '@/utils/address';
+import { computed, inject } from 'vue';
+import { useRoute } from 'vue-router';
 
 const route = useRoute();
 const address = route.params.address;

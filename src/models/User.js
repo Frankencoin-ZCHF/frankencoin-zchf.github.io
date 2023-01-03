@@ -1,11 +1,12 @@
-import { Model } from 'pinia-orm';
-import { computed } from 'vue';
-import Position from './Position';
-import Challenge from './Challenge';
-import { contractUrl, shortenAddress } from '@/utils/address.js';
 import { addresses } from '@/contracts/dictionnary';
 import useEquityRepository from '@/repositories/useEquityRepository';
+import { contractUrl, shortenAddress } from '@/utils/address.js';
+import { Model } from 'pinia-orm';
+import { computed } from 'vue';
+
 import { fixedNumberOperate } from '../utils/math';
+import Challenge from './Challenge';
+import Position from './Position';
 
 export default class User extends Model {
   static entity = 'users';

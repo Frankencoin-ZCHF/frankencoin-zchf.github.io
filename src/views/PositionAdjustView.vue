@@ -7,7 +7,7 @@
 
   <section class="mx-auto flex max-w-2xl flex-col gap-y-4 px-4 sm:px-8">
     <AppBox>
-      <AppForm v-if="!loading">
+      <AppForm v-if="!loading && position">
         <div class="space-y-12">
           <div class="space-y-4">
             <SwapFieldInput
@@ -138,32 +138,27 @@
 </template>
 
 <script setup>
-import { provide, ref, computed, watch, inject } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
-
+import AppBox from '@/components/AppBox.vue';
+import AppForm from '@/components/AppForm.vue';
+import AppLoading from '@/components/AppLoading.vue';
+import AppPageHeader from '@/components/AppPageHeader.vue';
+import DisplayAmount from '@/components/DisplayAmount.vue';
+import IconMagic from '@/components/icons/IconMagic.vue';
+import SwapFieldInput from '@/components/SwapFieldInput.vue';
+import usePositionsRepository from '@/repositories/usePositionsRepository';
+import useUsersRepository from '@/repositories/useUsersRepository';
+import adjustPosition from '@/transactions/adjustPosition';
+import collateralApprove from '@/transactions/collateralApprove';
+import { formatCommify, shrinkDecimals } from '@/utils/formatNumber';
 import {
-  bigNumberOperate,
   bigNumberAbs,
   bigNumberCompare,
   bigNumberMax,
+  bigNumberOperate,
   fixedNumberOperate,
 } from '@/utils/math';
-
-import { shrinkDecimals, formatCommify } from '@/utils/formatNumber';
-
-import usePositionsRepository from '@/repositories/usePositionsRepository';
-import useUsersRepository from '@/repositories/useUsersRepository';
-
-import collateralApprove from '@/transactions/collateralApprove';
-import adjustPosition from '@/transactions/adjustPosition';
-
-import AppPageHeader from '@/components/AppPageHeader.vue';
-import AppBox from '@/components/AppBox.vue';
-import AppLoading from '@/components/AppLoading.vue';
-import AppForm from '@/components/AppForm.vue';
-import IconMagic from '@/components/icons/IconMagic.vue';
-import SwapFieldInput from '@/components/SwapFieldInput.vue';
-import DisplayAmount from '@/components/DisplayAmount.vue';
+import { computed, inject, provide, ref, watch } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 
 const auth = inject('auth');
 const loading = inject('loading');
@@ -373,16 +368,18 @@ const submit = async () => {
 };
 
 const inputsInit = () => {
-  if (position.value.minted !== null) {
-    mintedInput.value = shrinkDecimals(position.value.minted);
-  }
+  if (position.value) {
+    if (position.value.minted !== null) {
+      mintedInput.value = shrinkDecimals(position.value.minted);
+    }
 
-  if (position.value.collateralBalance !== null) {
-    collateralInput.value = shrinkDecimals(position.value.collateralBalance);
-  }
+    if (position.value.collateralBalance !== null) {
+      collateralInput.value = shrinkDecimals(position.value.collateralBalance);
+    }
 
-  if (position.value.price !== null) {
-    liquidationPriceInput.value = shrinkDecimals(position.value.price);
+    if (position.value.price !== null) {
+      liquidationPriceInput.value = shrinkDecimals(position.value.price);
+    }
   }
 };
 
@@ -444,8 +441,9 @@ const error = computed(() => {
   return null;
 });
 
-if (!loading.value) inputsInit();
-else {
+if (!loading.value) {
+  inputsInit();
+} else {
   watch(loading, () => {
     inputsInit();
   });

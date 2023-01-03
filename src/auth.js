@@ -1,6 +1,6 @@
-import { defineStore } from 'pinia';
-import { useStorage } from '@vueuse/core';
 import useUsersRepository from '@/repositories/useUsersRepository';
+import { useStorage } from '@vueuse/core';
+import { defineStore } from 'pinia';
 
 let signer;
 

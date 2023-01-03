@@ -1,4 +1,4 @@
-import { ref, provide } from 'vue';
+import { provide, ref } from 'vue';
 
 export default () => {
   const dialogs = ref({});

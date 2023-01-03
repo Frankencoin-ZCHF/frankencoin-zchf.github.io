@@ -1,12 +1,11 @@
 <template>
   <AppPageHeader
-    title="Place Challenge"
+    title="Launch a challenge"
     backText="Back to position"
     :backTo="'/position/detail/' + address"
   />
 
   <section class="container m-auto max-w-2xl">
-    <AppPageHeader title="Launch a Challenge" />
     <AppBox>
       <AppForm v-if="!loading">
         <SwapFieldInput
@@ -18,7 +17,6 @@
           :symbol="position.collateral.symbol"
         />
         <div class="my-8 flex flex-col gap-2">
-
           <div class="flex">
             <div class="flex-1">Buy now price</div>
             <DisplayAmount
@@ -60,14 +58,25 @@
           </div>
 
           <div class="mt-4 text-sm">
-            <p>The amount you provide will be publicly auctioned. There are two possible outcomes:</p>
+            <p>
+              The amount you provide will be publicly auctioned. There are two
+              possible outcomes:
+            </p>
 
             <ol class="flex flex-col gap-y-2 pl-6 [&>li]:list-decimal">
               <li>
-                Someone bids the 'buy now' price before the end of the auction. In that case, the bidder buys the amount of {{ position.collateral.symbol }} tokens you provided for {{ formatCurrency(position.price) }} ZCHF per unit.
+                Someone bids the 'buy now' price before the end of the auction.
+                In that case, the bidder buys the amount of
+                {{ position.collateral.symbol }} tokens you provided for
+                {{ formatCurrency(position.price) }} ZCHF per unit.
               </li>
               <li>
-                The auction ends with the highest bids being below the 'buy now' price. In that case, you get your {{ position.collateral.symbol }} tokens back and the bidder gets to buy the same amount of {{ position.collateral.symbol }} tokens out of the position, with the proceeds being used for repayment. You get a reward.
+                The auction ends with the highest bids being below the 'buy now'
+                price. In that case, you get your
+                {{ position.collateral.symbol }} tokens back and the bidder gets
+                to buy the same amount of
+                {{ position.collateral.symbol }} tokens out of the position,
+                with the proceeds being used for repayment. You get a reward.
               </li>
             </ol>
           </div>
@@ -79,30 +88,26 @@
 </template>
 
 <script setup>
-import { ref, computed, inject, provide } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
-
-import { durationFormatter } from '@/utils/date';
+import AppBox from '@/components/AppBox.vue';
+import AppForm from '@/components/AppForm.vue';
+import AppLoading from '@/components/AppLoading.vue';
+import AppPageHeader from '@/components/AppPageHeader.vue';
+import DisplayAmount from '@/components/DisplayAmount.vue';
+import SwapFieldInput from '@/components/SwapFieldInput.vue';
 import { addresses } from '@/contracts/dictionnary';
-
-import {
-  bigNumberMin,
-  bigNumberCompare,
-  fixedNumberOperate,
-} from '@/utils/math';
-
+import useCollateralsRepository from '@/repositories/useCollateralsRepository';
+import usePositionsRepository from '@/repositories/usePositionsRepository';
 import collateralApprove from '@/transactions/collateralApprove';
 import launchChallenge from '@/transactions/launchChallenge';
-
-import usePositionsRepository from '@/repositories/usePositionsRepository';
-import useCollateralsRepository from '@/repositories/useCollateralsRepository';
-
-import AppPageHeader from '@/components/AppPageHeader.vue';
-import AppBox from '@/components/AppBox.vue';
-import AppLoading from '@/components/AppLoading.vue';
-import AppForm from '@/components/AppForm.vue';
-import SwapFieldInput from '@/components/SwapFieldInput.vue';
-import DisplayAmount from '@/components/DisplayAmount.vue';
+import { durationFormatter } from '@/utils/date';
+import { formatCurrency } from '@/utils/formatNumber';
+import {
+  bigNumberCompare,
+  bigNumberMin,
+  fixedNumberOperate,
+} from '@/utils/math';
+import { computed, inject, provide, ref } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 
 const auth = inject('auth');
 const reload = inject('reload');

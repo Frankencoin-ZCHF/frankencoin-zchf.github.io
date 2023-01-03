@@ -1,11 +1,11 @@
-import { Repository, useRepo } from 'pinia-orm';
 import { addresses } from '@/contracts/dictionnary';
-import User from '@/models/User';
-import useFrankencoinFetcher from '@/fetchers/useFrankencoinFetcher';
-import useEquityFetcher from '@/fetchers/useEquityFetcher';
-import useStablecoinFetcher from '@/fetchers/useStablecoinFetcher';
 import useCollateralFetcher from '@/fetchers/useCollateralFetcher';
+import useEquityFetcher from '@/fetchers/useEquityFetcher';
+import useFrankencoinFetcher from '@/fetchers/useFrankencoinFetcher';
+import useStablecoinFetcher from '@/fetchers/useStablecoinFetcher';
+import User from '@/models/User';
 import useCollateralsRepository from '@/repositories/useCollateralsRepository';
+import { Repository, useRepo } from 'pinia-orm';
 
 class UsersRepository extends Repository {
   frankencoinFetcher = useFrankencoinFetcher();

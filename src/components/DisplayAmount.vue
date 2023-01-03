@@ -28,10 +28,9 @@
 </template>
 
 <script setup>
-import { contractUrl } from '@/utils/address.js';
-import { formatCurrency, formatCommify } from '@/utils/formatNumber';
-
 import AppButton from '@/components/AppButton.vue';
+import { contractUrl } from '@/utils/address.js';
+import { formatCommify, formatCurrency } from '@/utils/formatNumber';
 
 defineProps({
   amount: [String, Number],

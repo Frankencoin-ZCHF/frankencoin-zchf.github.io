@@ -1,8 +1,7 @@
-import { Repository, useRepo } from 'pinia-orm';
-import { ethers } from 'ethers';
 import { addresses } from '@/contracts/dictionnary';
-
 import Stablecoin from '@/models/Stablecoin';
+import { ethers } from 'ethers';
+import { Repository, useRepo } from 'pinia-orm';
 
 class StablecoinRepository extends Repository {
   use = Stablecoin;

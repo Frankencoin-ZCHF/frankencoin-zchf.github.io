@@ -1,5 +1,5 @@
-import { ethers, FixedNumber, BigNumber } from 'ethers';
 import { shrinkDecimals } from '@/utils/formatNumber';
+import { BigNumber, ethers, FixedNumber } from 'ethers';
 
 export const stringToDec18 = (value) => {
   const string = String(value);
@@ -117,7 +117,10 @@ export const bigNumberMax = (operand1, operand2) => {
     max = sanitizedOperand2;
   }
 
-  return ethers.utils.formatEther(max);
+  max = ethers.utils.formatEther(max);
+  const shrinked = shrinkDecimals(max);
+
+  return shrinked;
 };
 
 export const bigNumberMin = (operand1, operand2) => {
@@ -133,5 +136,8 @@ export const bigNumberMin = (operand1, operand2) => {
     min = sanitizedOperand2;
   }
 
-  return ethers.utils.formatEther(min);
+  min = ethers.utils.formatEther(min);
+  const shrinked = shrinkDecimals(min);
+
+  return shrinked;
 };

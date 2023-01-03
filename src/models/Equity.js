@@ -1,5 +1,5 @@
-import Token from './Token';
 import { fixedNumberOperate } from '../utils/math';
+import Token from './Token';
 
 export default class Equity extends Token {
   static entity = 'equity';

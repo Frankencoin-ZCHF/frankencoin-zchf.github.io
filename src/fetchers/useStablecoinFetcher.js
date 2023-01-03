@@ -1,5 +1,5 @@
-import { MOCKXCHFTOKEN_ABI, addresses } from '@/contracts/dictionnary';
 import useFetcher from '@/composables/useFetcher';
+import { addresses, MOCKXCHFTOKEN_ABI } from '@/contracts/dictionnary';
 
 export default () => {
   const fetcher = useFetcher(addresses.stableCoin, MOCKXCHFTOKEN_ABI);

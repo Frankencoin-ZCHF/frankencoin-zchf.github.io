@@ -1,11 +1,10 @@
-import { createApp } from 'vue';
 import { createPinia } from 'pinia';
 import { createORM } from 'pinia-orm';
+import { createApp } from 'vue';
 
 import App from './App.vue';
-import router from './router';
-
 import './assets/main.css';
+import router from './router';
 
 const pinia = createPinia().use(createORM());
 const app = createApp(App);

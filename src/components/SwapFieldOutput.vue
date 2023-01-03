@@ -15,9 +15,8 @@
 </template>
 
 <script setup>
-import { computed } from 'vue';
-
 import SwapField from '@/components/SwapField.vue';
+import { computed } from 'vue';
 
 const props = defineProps({
   result: [Number, String],

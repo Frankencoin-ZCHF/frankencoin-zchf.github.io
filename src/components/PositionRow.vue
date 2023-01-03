@@ -56,12 +56,11 @@
 </template>
 
 <script setup>
-import { addresses } from '@/contracts/dictionnary';
-
-import AppTableRow from '@/components/AppTableRow.vue';
 import AppButton from '@/components/AppButton.vue';
 import AppTableHeaderMobile from '@/components/AppTableHeaderMobile.vue';
+import AppTableRow from '@/components/AppTableRow.vue';
 import DisplayAmount from '@/components/DisplayAmount.vue';
+import { addresses } from '@/contracts/dictionnary';
 
 defineProps({
   position: Object,

@@ -1,13 +1,10 @@
-import { FRANKENCOIN_ABI, addresses } from '@/contracts/dictionnary';
-
-import config from '@/config';
-
 import useContract from '@/composables/useContract';
 import useNotification from '@/composables/useNotification';
 import useTransaction from '@/composables/useTransaction';
-
-import { stringToDec18, dec18ToString } from '@/utils/math';
+import config from '@/config';
+import { addresses, FRANKENCOIN_ABI } from '@/contracts/dictionnary';
 import { formatCurrency } from '@/utils/formatNumber';
+import { dec18ToString, stringToDec18 } from '@/utils/math';
 
 export default async (amount) => {
   const { executeTransaction } = useTransaction();

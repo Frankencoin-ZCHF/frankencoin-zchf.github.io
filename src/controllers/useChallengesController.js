@@ -1,14 +1,12 @@
-import { ethers } from 'ethers';
-import { MINTINGHUB_ABI, addresses } from '@/contracts/dictionnary';
-
+import { addresses, MINTINGHUB_ABI } from '@/contracts/dictionnary';
+import useMintingHubFetcher from '@/fetchers/useMintingHubFetcher';
 import useChallengesRepository from '@/repositories/useChallengesRepository';
 import useUsersRepository from '@/repositories/useUsersRepository';
-
-import useMintingHubFetcher from '@/fetchers/useMintingHubFetcher';
-
 import { dateFormatter } from '@/utils/date';
 import { addressCompare } from '@/utils/helpers';
 import fetchInfura from '@/utils/infura';
+import { ethers } from 'ethers';
+
 import { dec18ToString } from '../utils/math';
 
 export default () => {

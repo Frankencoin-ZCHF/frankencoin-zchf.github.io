@@ -35,15 +35,13 @@
 </template>
 
 <script setup>
-import { computed, inject } from 'vue';
-
-import usePositionsRepository from '@/repositories/usePositionsRepository';
-
+import AppLoading from '@/components/AppLoading.vue';
 import AppPageHeader from '@/components/AppPageHeader.vue';
 import AppTable from '@/components/AppTable.vue';
 import AppTableRow from '@/components/AppTableRow.vue';
-import AppLoading from '@/components/AppLoading.vue';
 import PositionRow from '@/components/PositionRow.vue';
+import usePositionsRepository from '@/repositories/usePositionsRepository';
+import { computed, inject } from 'vue';
 
 const positionsRepository = usePositionsRepository();
 

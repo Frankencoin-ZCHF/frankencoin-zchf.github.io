@@ -1,8 +1,8 @@
-import { STABLECOINBRIDGE_ABI, addresses } from '@/contracts/dictionnary';
-import config from '@/config';
 import useContract from '@/composables/useContract';
 import useNotification from '@/composables/useNotification';
 import useTransaction from '@/composables/useTransaction';
+import config from '@/config';
+import { addresses, STABLECOINBRIDGE_ABI } from '@/contracts/dictionnary';
 import { stringToDec18 } from '@/utils/math';
 
 export default async (amount) => {

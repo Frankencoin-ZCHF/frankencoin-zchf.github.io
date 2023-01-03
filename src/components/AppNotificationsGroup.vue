@@ -23,8 +23,9 @@
 </template>
 
 <script setup>
-import AppNotification from './AppNotification.vue';
 import useNotification from '@/composables/useNotification';
+
+import AppNotification from './AppNotification.vue';
 
 const { notifications } = useNotification();
 </script>

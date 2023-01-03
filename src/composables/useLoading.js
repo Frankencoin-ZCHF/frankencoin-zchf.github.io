@@ -1,5 +1,5 @@
-import { computed, ref, watch } from 'vue';
 import { createGlobalState } from '@vueuse/core';
+import { computed, ref, watch } from 'vue';
 
 export default createGlobalState(() => {
   const requests = ref({});

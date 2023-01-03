@@ -42,25 +42,19 @@
 </template>
 
 <script setup>
-import { computed, ref, watch, inject, provide } from 'vue';
-import blockchain from '@/config';
-
-import useSwapBox from '@/composables/useSwapBox';
-
-import useCalculate from '@/composables/useCalculate';
-
+import AppButton from '@/components/AppButton.vue';
 import AppForm from '@/components/AppForm.vue';
 import SwapFieldInput from '@/components/SwapFieldInput.vue';
 import SwapFieldOutput from '@/components/SwapFieldOutput.vue';
-import AppButton from '@/components/AppButton.vue';
-
-import zchfToFps from '@/transactions/zchfToFps';
-import fpsToZchf from '@/transactions/fpsToZchf';
-
+import useCalculate from '@/composables/useCalculate';
+import useSwapBox from '@/composables/useSwapBox';
+import blockchain from '@/config';
 import calculateFpsFromZchf from '@/transactions/calculateFpsFromZchf';
 import calculateZchfFromFps from '@/transactions/calculateZchfFromFps';
-
-import { fixedNumberOperate, bigNumberCompare } from '@/utils/math';
+import fpsToZchf from '@/transactions/fpsToZchf';
+import zchfToFps from '@/transactions/zchfToFps';
+import { bigNumberCompare, fixedNumberOperate } from '@/utils/math';
+import { computed, inject, provide, ref, watch } from 'vue';
 
 const equity = inject('equity');
 const auth = inject('auth');

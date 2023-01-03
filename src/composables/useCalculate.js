@@ -1,5 +1,5 @@
-import { ref } from 'vue';
 import { useDebounceFn } from '@vueuse/core';
+import { ref } from 'vue';
 
 export default ({ calcul, amount, result, blockCalculation }) => {
   const isCalculating = ref(false);

@@ -7,7 +7,7 @@
 
   <section class="mx-auto flex max-w-2xl flex-col gap-y-4 px-4 sm:px-8">
     <AppBox>
-      <AppForm v-if="!loading">
+      <AppForm v-if="!loading && position">
         <div class="space-y-8">
           <SwapFieldInput
             v-model="amount"
@@ -78,31 +78,26 @@
 </template>
 
 <script setup>
-import { computed, ref, inject, provide } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
-
-import { addresses } from '@/contracts/dictionnary';
-import config from '@/config';
-
-import {
-  fixedNumberOperate,
-  bigNumberCompare,
-  bigNumberMin,
-} from '@/utils/math';
-
-import usePositionsRepository from '@/repositories/usePositionsRepository';
-import useCollateralsRepository from '@/repositories/useCollateralsRepository';
-
-import collateralApprove from '@/transactions/collateralApprove';
-import clonePosition from '@/transactions/clonePosition';
-
-import AppPageHeader from '@/components/AppPageHeader.vue';
 import AppBox from '@/components/AppBox.vue';
-import AppLoading from '@/components/AppLoading.vue';
 import AppForm from '@/components/AppForm.vue';
+import AppLoading from '@/components/AppLoading.vue';
+import AppPageHeader from '@/components/AppPageHeader.vue';
+import DisplayAmount from '@/components/DisplayAmount.vue';
 import SwapFieldInput from '@/components/SwapFieldInput.vue';
 import SwapFieldOutput from '@/components/SwapFieldOutput.vue';
-import DisplayAmount from '@/components/DisplayAmount.vue';
+import config from '@/config';
+import { addresses } from '@/contracts/dictionnary';
+import useCollateralsRepository from '@/repositories/useCollateralsRepository';
+import usePositionsRepository from '@/repositories/usePositionsRepository';
+import clonePosition from '@/transactions/clonePosition';
+import collateralApprove from '@/transactions/collateralApprove';
+import {
+  bigNumberCompare,
+  bigNumberMin,
+  fixedNumberOperate,
+} from '@/utils/math';
+import { computed, inject, provide, ref } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 
 const auth = inject('auth');
 const reload = inject('reload');
@@ -140,13 +135,17 @@ const availableAmount = computed(() =>
   fixedNumberOperate('-', position.value.limit, position.value.minted)
 );
 
-const userValue = computed(() =>
-  fixedNumberOperate(
-    '*',
-    auth.user.tokens[position.value.collateralAddress]?.amount,
-    position.value.price
-  )
-);
+const userValue = computed(() => {
+  if (auth.isConnected) {
+    return fixedNumberOperate(
+      '*',
+      auth.user.tokens[position.value.collateralAddress]?.amount,
+      position.value.price
+    );
+  } else {
+    return position.value.price;
+  }
+});
 
 const borrowingLimit = computed(() =>
   bigNumberMin(availableAmount.value, userValue.value)
