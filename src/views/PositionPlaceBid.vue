@@ -13,10 +13,12 @@
             <SwapFieldInput
               v-model="amount"
               label="Your bid"
-              :max="maxAmount"
-              :customMaxAmount="auth.user.ZCHF"
+              :max="auth.user.ZCHF"
+              :limit="maxAmount"
+              limitLabel="limit"
               :showWallet="true"
-              symbol="ZCHF"
+              :symbol="frankencoin.symbol"
+              :decimals="frankencoin.decimals"
             />
             <div class="flex flex-col gap-1">
               <span>
@@ -241,7 +243,8 @@ const submit = async () => {
   const tx = await placeBid(
     challenge.value.index,
     amount,
-    challenge.value.size
+    challenge.value.size,
+    position.value.collateral.decimals
   );
 
   if (!tx.error) {

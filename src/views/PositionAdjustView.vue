@@ -13,10 +13,10 @@
             <SwapFieldInput
               v-model="mintedInput"
               label="Amount"
-              :max="auth.user.ZCHF"
-              :limit="repayPosition"
-              :fromWallet="true"
-              symbol="ZCHF"
+              :max="repayPosition"
+              :fromWallet="false"
+              :symbol="frankencoin.symbol"
+              :decimals="frankencoin.decimals"
             >
               <template v-slot:action>
                 <button
@@ -93,6 +93,7 @@
               :showWallet="true"
               :symbol="position.collateral.symbol"
               :note="collateralNote"
+              :decimals="position.collateral.decimals"
             >
               <template v-slot:action>
                 <button
@@ -115,8 +116,9 @@
               :maxInput="false"
               :fromWallet="false"
               :hideMaxLabel="true"
-              symbol="ZCHF"
+              :symbol="frankencoin.symbol"
               :note="liquidationPriceNote"
+              :decimals="frankencoin.decimals"
             >
               <template v-slot:action>
                 <button
@@ -149,7 +151,7 @@ import usePositionsRepository from '@/repositories/usePositionsRepository';
 import useUsersRepository from '@/repositories/useUsersRepository';
 import adjustPosition from '@/transactions/adjustPosition';
 import collateralApprove from '@/transactions/collateralApprove';
-import { formatCommify, shrinkDecimals } from '@/utils/formatNumber';
+import { formatCommify, formatDecimals } from '@/utils/formatNumber';
 import {
   bigNumberAbs,
   bigNumberCompare,
@@ -181,9 +183,12 @@ const liquidationPriceInput = ref(null);
 
 const pending = ref(false);
 
-const repayPosition = computed(() =>
-  bigNumberMax(0, bigNumberOperate('-', position.value.minted, auth.user.ZCHF))
-);
+const repayPosition = computed(() => {
+  return bigNumberMax(
+    0,
+    bigNumberOperate('-', position.value.minted, auth.user.ZCHF)
+  );
+});
 
 const allowed = computed(() =>
   bigNumberCompare('>=', auth.user.allowances[address], collateralInput.value)
@@ -259,6 +264,8 @@ const paidOutToWalletLabel = computed(() =>
 );
 
 const paidOutToWalletAmount = computed(() => {
+  let amount;
+
   const reserveAndFees = fixedNumberOperate(
     '+',
     borrowersReserveContribution.value,
@@ -272,14 +279,16 @@ const paidOutToWalletAmount = computed(() => {
       fees.value
     );
 
-    return bigNumberOperate(
+    amount = bigNumberOperate(
       '-',
       bigNumberAbs(additionalAndFees),
       reserveAndFees
     );
   } else {
-    return bigNumberOperate('-', additionalAmount.value, reserveAndFees);
+    amount = bigNumberOperate('-', additionalAmount.value, reserveAndFees);
   }
+
+  return formatDecimals(amount);
 });
 
 const collateralDifference = computed(() => {
@@ -292,10 +301,14 @@ const collateralDifference = computed(() => {
   return !bigNumberCompare('=', difference, 0) ? difference : 0;
 });
 
+const isCollateralDifferenceNegative = computed(() =>
+  bigNumberCompare('<', collateralDifference.value, 0)
+);
+
 const collateralNote = computed(() => {
   if (!collateralDifference.value) return;
 
-  if (bigNumberCompare('<', collateralDifference.value, 0)) {
+  if (isCollateralDifferenceNegative.value) {
     return `${bigNumberAbs(collateralDifference.value)} ${
       position.value.collateral.symbol
     } sent back to your wallet`;
@@ -348,10 +361,13 @@ const allow = async () => {
 const submit = async () => {
   pending.value = true;
 
+  const collateralDecimals = position.value.collateral.decimals;
+
   const tx = await adjustPosition(
     address,
     mintedInput,
     collateralInput,
+    collateralDecimals,
     liquidationPriceInput
   );
 
@@ -370,15 +386,15 @@ const submit = async () => {
 const inputsInit = () => {
   if (position.value) {
     if (position.value.minted !== null) {
-      mintedInput.value = shrinkDecimals(position.value.minted);
+      mintedInput.value = formatDecimals(position.value.minted);
     }
 
     if (position.value.collateralBalance !== null) {
-      collateralInput.value = shrinkDecimals(position.value.collateralBalance);
+      collateralInput.value = formatDecimals(position.value.collateralBalance);
     }
 
     if (position.value.price !== null) {
-      liquidationPriceInput.value = shrinkDecimals(position.value.price);
+      liquidationPriceInput.value = formatDecimals(position.value.price);
     }
   }
 };
@@ -400,14 +416,18 @@ const error = computed(() => {
     return {
       message: `This position is limited to ${position.value.limit} ZCHF`,
     };
-  } else if (bigNumberCompare('>', mintedInput.value, auth.user.ZCHF)) {
+  } else if (
+    isNegativeDifference.value &&
+    bigNumberCompare('>', paidOutToWalletAmount.value, auth.user.ZCHF)
+  ) {
     return {
       message: 'Insufficient ZCHF amount in wallet',
     };
   } else if (
+    !isCollateralDifferenceNegative.value &&
     bigNumberCompare(
       '>',
-      collateralInput.value,
+      collateralDifference.value,
       auth.user.tokens[position.value.collateralAddress]?.amount
     )
   ) {

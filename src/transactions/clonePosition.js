@@ -6,7 +6,12 @@ import { addresses, MINTINGHUB_ABI } from '@/contracts/dictionnary';
 import { shortenAddress } from '@/utils/address';
 import { stringToDec18 } from '@/utils/math';
 
-export default async (positionAddress, initialCollateral, initialMint) => {
+export default async (
+  positionAddress,
+  initialCollateral,
+  collateralDecimals,
+  initialMint
+) => {
   const { executeTransaction } = useTransaction();
   const { contract } = useContract(addresses.mintingHub, MINTINGHUB_ABI);
 
@@ -15,7 +20,7 @@ export default async (positionAddress, initialCollateral, initialMint) => {
   const transaction = async () =>
     await contract.clonePosition(
       positionAddress,
-      stringToDec18(initialCollateral.value),
+      stringToDec18(initialCollateral.value, collateralDecimals),
       stringToDec18(initialMint.value)
     );
 

@@ -1,8 +1,7 @@
+import Position from '@/models/Position';
+import User from '@/models/User';
+import { fixedNumberOperate } from '@/utils/math';
 import { Model } from 'pinia-orm';
-
-import { fixedNumberOperate } from '../utils/math';
-import Position from './Position';
-import User from './User';
 
 export default class Challenge extends Model {
   static entity = 'challenges';

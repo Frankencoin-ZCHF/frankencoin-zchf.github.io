@@ -12,9 +12,9 @@
           v-model="amount"
           label="Amount"
           :max="maxAmount"
-          :customMaxAmount="customMaxAmount"
           :fromWallet="maxLimitFromWallet"
           :symbol="position.collateral.symbol"
+          :decimals="position.collateral.decimals"
         />
         <div class="my-8 flex flex-col gap-2">
           <div class="flex">
@@ -140,10 +140,6 @@ const maxLimitFromWallet = computed(() =>
   )
 );
 
-const customMaxAmount = computed(
-  () => auth.user.tokens[position.value.collateralAddress]?.amount
-);
-
 const disabled = computed(() => !parseFloat(amount.value));
 
 const allowed = computed(() => {
@@ -202,7 +198,9 @@ const allow = async () => {
 
 const submit = async () => {
   pending.value = true;
-  const tx = await launchChallenge(address, amount);
+
+  const collateralDecimals = position.value.collateral.decimals;
+  const tx = await launchChallenge(address, amount, collateralDecimals);
 
   if (!tx.error) {
     await reload();

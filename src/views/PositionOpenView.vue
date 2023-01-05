@@ -16,7 +16,8 @@
             :hideMaxLabel="true"
             :fromWallet="false"
             :displayMaxButton="true"
-            symbol="ZCHF"
+            :symbol="frankencoin.symbol"
+            :decimals="frankencoin.decimals"
           />
 
           <SwapFieldOutput
@@ -237,7 +238,9 @@ const allow = async () => {
 const submit = async () => {
   pending.value = true;
 
-  const tx = await clonePosition(address, result, amount);
+  const collateralDecimals = position.value.collateral.decimals;
+
+  const tx = await clonePosition(address, result, collateralDecimals, amount);
 
   if (!tx.error) {
     const txReceipt = await config.provider.getTransactionReceipt(tx.hash);

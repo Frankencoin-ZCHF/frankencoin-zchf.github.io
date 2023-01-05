@@ -1,14 +1,14 @@
-import { shrinkDecimals } from '@/utils/formatNumber';
+import { formatDecimals } from '@/utils/formatNumber';
 import { BigNumber, ethers, FixedNumber } from 'ethers';
 
-export const stringToDec18 = (value) => {
+export const stringToDec18 = (value, decimals) => {
   const string = String(value);
 
-  return ethers.utils.parseEther(string);
+  return ethers.utils.parseUnits(string, decimals);
 };
 
-export const dec18ToString = (value) => {
-  return ethers.utils.formatEther(value);
+export const dec18ToString = (value, decimals) => {
+  return ethers.utils.formatUnits(value, decimals);
 };
 
 export const bigNumberSanitize = (value) => {
@@ -93,15 +93,16 @@ export const fixedNumberOperate = (operation, operand1, operand2) => {
   }
 
   result = result.toString();
-  const shrinked = shrinkDecimals(result);
+  const formatted = formatDecimals(result);
 
-  return shrinked;
+  return formatted;
 };
 
 export const bigNumberAbs = (value) => {
   const sanitizedValue = bigNumberSanitize(value);
+  const absValue = ethers.utils.formatEther(sanitizedValue.abs());
 
-  return ethers.utils.formatEther(sanitizedValue.abs());
+  return formatDecimals(absValue);
 };
 
 export const bigNumberMax = (operand1, operand2) => {
@@ -118,9 +119,9 @@ export const bigNumberMax = (operand1, operand2) => {
   }
 
   max = ethers.utils.formatEther(max);
-  const shrinked = shrinkDecimals(max);
+  const formatted = formatDecimals(max);
 
-  return shrinked;
+  return formatted;
 };
 
 export const bigNumberMin = (operand1, operand2) => {
@@ -137,7 +138,7 @@ export const bigNumberMin = (operand1, operand2) => {
   }
 
   min = ethers.utils.formatEther(min);
-  const shrinked = shrinkDecimals(min);
+  const formatted = formatDecimals(min);
 
-  return shrinked;
+  return formatted;
 };

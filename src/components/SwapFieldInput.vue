@@ -19,7 +19,7 @@
         :mask="Number"
         radix="."
         :mapToRadix="[',']"
-        :scale="18"
+        :scale="decimals"
       />
 
       <AppButton field @click="setMax" v-if="displayMaxButton">Max</AppButton>
@@ -40,7 +40,7 @@
 import AppButton from '@/components/AppButton.vue';
 import DisplayAmount from '@/components/DisplayAmount.vue';
 import SwapField from '@/components/SwapField.vue';
-import { shrinkDecimals } from '@/utils/formatNumber';
+import { formatDecimals } from '@/utils/formatNumber';
 import { bigNumberMin } from '@/utils/math';
 import { computed } from 'vue';
 import { IMaskComponent } from 'vue-imask';
@@ -61,7 +61,6 @@ const props = defineProps({
   max: [Number, String],
   limit: String,
   limitLabel: String,
-  customMaxAmount: [String, Number],
   maxInput: {
     type: Boolean,
     default: true,
@@ -79,6 +78,10 @@ const props = defineProps({
     default: false,
   },
   error: Object,
+  decimals: {
+    type: Number,
+    default: 18,
+  },
 });
 
 const propModel = computed({
@@ -98,8 +101,7 @@ const setMax = () => {
       ? bigNumberMin(props.max, props.limit)
       : props.max;
 
-  const shrinked = shrinkDecimals(max);
-
-  emit('update:modelValue', shrinked);
+  const formatted = formatDecimals(max);
+  emit('update:modelValue', formatted);
 };
 </script>

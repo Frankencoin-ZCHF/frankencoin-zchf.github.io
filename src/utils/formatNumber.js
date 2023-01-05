@@ -17,7 +17,7 @@ export const formatCurrency = (value, digits = 2) => {
   return formatter.format(amount);
 };
 
-export const shrinkDecimals = (value) => {
+export const formatDecimals = (value) => {
   let string = String(value);
   const patterns = ['.0', '.'];
 
@@ -29,8 +29,7 @@ export const shrinkDecimals = (value) => {
 };
 
 export const formatCommify = (amount) => {
-  const shrinked = shrinkDecimals(amount);
-  const formatted = ethers.utils.commify(shrinked);
+  const formatted = formatDecimals(amount);
 
-  return formatted;
+  return ethers.utils.commify(formatted);
 };

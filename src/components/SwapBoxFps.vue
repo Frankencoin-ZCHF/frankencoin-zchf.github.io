@@ -8,6 +8,7 @@
       :error="error"
       :limit="limit"
       :limitLabel="limitLabel"
+      :decimals="from.decimals"
     />
 
     <div class="text-center">
@@ -57,6 +58,7 @@ import { bigNumberCompare, fixedNumberOperate } from '@/utils/math';
 import { computed, inject, provide, ref, watch } from 'vue';
 
 const equity = inject('equity');
+const frankencoin = inject('frankencoin');
 const auth = inject('auth');
 const reload = inject('reload');
 
@@ -72,9 +74,10 @@ const disabled = computed(() => !parseFloat(amount.value));
 const wrongChain = computed(() => auth.chainId != blockchain.targetChainId);
 
 const currencyA = ref({
-  symbol: 'ZCHF',
-  placeholder: 'ZCHF amount',
+  symbol: frankencoin.value.symbol,
+  placeholder: `${frankencoin.value.symbol} amount`,
   label: 'Send',
+  decimals: frankencoin.value.decimals,
   max: computed(() => auth.user.ZCHF),
 
   calculate: () => calculateFpsFromZchf(amount),
@@ -93,9 +96,10 @@ const currencyA = ref({
 });
 
 const currencyB = ref({
-  symbol: 'FPS',
-  placeholder: 'FPS amount',
+  symbol: equity.value.symbol,
+  placeholder: `${equity.value.symbol} amount`,
   label: 'Send',
+  decimals: equity.value.decimals,
   max: computed(() => auth.user.FPS),
 
   calculate: () => calculateZchfFromFps(amount),
@@ -172,7 +176,7 @@ const updateConversionNote = () => {
 
     conversionNote.value = `1 ${currencyB.value.symbol} = ${ratio} ${currencyA.value.symbol}`;
   } else {
-    conversionNote.value = 'FPS price is dynamically calculated';
+    conversionNote.value = `${currencyB.value.symbol} price is dynamically calculated`;
   }
 };
 

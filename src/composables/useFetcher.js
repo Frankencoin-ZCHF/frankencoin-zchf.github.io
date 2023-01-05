@@ -20,6 +20,7 @@ export default (address, abi) => {
     } else if (typeof arg == 'object') {
       config.method = arg.method;
       config.formatter = arg.formatter;
+      config.decimals = arg.decimals ? arg.decimals.value : 18;
       config.params = arg.params;
       config.fromUser = arg.fromUser;
     }
@@ -39,11 +40,11 @@ export default (address, abi) => {
 
     switch (config.formatter) {
       case 'amount':
-        return dec18ToString(value);
+        return dec18ToString(value, config.decimals);
       case 'address':
         return ethers.utils.getAddress(value);
       case 'number':
-        return String(value);
+        return Number(value);
       case 'date':
         return dateFormatter(value);
       default:

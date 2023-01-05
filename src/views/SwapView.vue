@@ -57,6 +57,7 @@ import { bigNumberCompare } from '@/utils/math';
 import { computed, inject, provide, ref } from 'vue';
 
 const stablecoin = inject('stablecoin');
+const frankencoin = inject('frankencoin');
 const auth = inject('auth');
 const reload = inject('reload');
 const loading = inject('loading');
@@ -92,10 +93,11 @@ const swapLimit = computed(() =>
 );
 
 const currencyA = ref({
-  symbol: 'XCHF',
-  placeholder: 'XCHF amount',
+  symbol: stablecoin.value.symbol,
+  placeholder: `${stablecoin.value.symbol} amount`,
   label: 'Send',
   max: computed(() => auth.user.XCHF),
+  decimals: stablecoin.value.decimals,
 
   transaction: async () => {
     pending.value = true;
@@ -112,10 +114,11 @@ const currencyA = ref({
 });
 
 const currencyB = ref({
-  symbol: 'ZCHF',
-  placeholder: 'ZCHF amount',
+  symbol: frankencoin.value.symbol,
+  placeholder: `${frankencoin.value.symbol} amount`,
   label: 'Send',
   max: computed(() => auth.user.ZCHF),
+  decimals: frankencoin.value.decimals,
 
   transaction: async () => {
     pending.value = true;

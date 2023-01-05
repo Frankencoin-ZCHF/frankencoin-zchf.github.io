@@ -16,7 +16,7 @@
     </AppTableRow>
   </AppTable>
 
-  <AppPageHeader title="All positions" class="mt-8" />
+  <AppPageHeader title="Other positions" class="mt-8" />
   <AppTable :columns="columns">
     <template v-if="allPositions.length > 0 && !loading">
       <template v-for="position in allPositions" :key="position.address">
