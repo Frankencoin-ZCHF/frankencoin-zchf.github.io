@@ -60,8 +60,8 @@ const equity = inject('equity');
 const auth = inject('auth');
 const reload = inject('reload');
 
-const amount = ref('0');
-const result = ref('0');
+const amount = ref();
+const result = ref();
 
 const pending = ref(false);
 const conversionNote = ref(null);

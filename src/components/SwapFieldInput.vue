@@ -10,18 +10,16 @@
   >
     <div class="flex gap-1 rounded-lg bg-neutral-100 p-1">
       <IMaskComponent
+        v-model="propModel"
         type="text"
         inputmode="decimal"
         class="w-full flex-1 rounded-lg bg-transparent px-2 py-1 text-lg"
         :class="{ 'text-red': !!error }"
         :placeholder="placeholder"
-        v-model="numberModel"
         :mask="Number"
         radix="."
         :mapToRadix="[',']"
         :scale="18"
-        @accept:masked="onAccept"
-        @accept:unmasked="onAcceptUnmasked"
       />
 
       <AppButton field @click="setMax" v-if="displayMaxButton">Max</AppButton>
@@ -49,51 +47,8 @@ import { IMaskComponent } from 'vue-imask';
 
 const emit = defineEmits(['update:modelValue']);
 
-const numberModel = '';
-
-const onAccept = (value) => {
-  console.log(value);
-};
-
-const onAcceptUnmasked = (unmaskedValue) => {
-  console.log(unmaskedValue);
-};
-
-// const keyDownHandle = (event) => {
-//   const key = event.key;
-//   const keyCode = event.keyCode;
-
-//   const allowedKeycodes = [8, 16, 37, 39, 190, 188];
-//   const isAllowedKey = allowedKeycodes.includes(keyCode);
-//   const isValidKey = /[0-9]|\./.test(key) || isAllowedKey;
-
-//   const inputValue = event.target.value;
-//   const pointPosition = inputValue.indexOf('.');
-
-//   const decimals = inputValue.substring(pointPosition + 1);
-//   const decimalsLength = decimals.length + 1;
-//   const tooManyDecimals = decimalsLength > 18;
-
-//   if (keyCode === 188 && pointPosition < 0) {
-//     emit('update:modelValue', `${inputValue}.`);
-//     event.preventDefault();
-//   }
-
-//   if (
-//     !isValidKey ||
-//     (tooManyDecimals && !isAllowedKey) ||
-//     ((keyCode === 188 || keyCode === 190) && pointPosition > 0)
-//   ) {
-//     event.preventDefault();
-//   }
-// };
-
-// const keyUpHandle = (event) => {
-//   emit('update:modelValue', event.target.value);
-// };
-
 const props = defineProps({
-  modelValue: [String, Number],
+  modelValue: String,
   label: {
     type: String,
     default: 'Send',
