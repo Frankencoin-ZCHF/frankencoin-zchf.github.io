@@ -9,16 +9,19 @@
     :hideMaxLabel="hideMaxLabel"
   >
     <div class="flex gap-1 rounded-lg bg-neutral-100 p-1">
-      <input
-        v-model="propModel"
+      <IMaskComponent
         type="text"
-        pattern="[0-9]*(.[0-9]+)?"
         inputmode="decimal"
         class="w-full flex-1 rounded-lg bg-transparent px-2 py-1 text-lg"
         :class="{ 'text-red': !!error }"
         :placeholder="placeholder"
-        @keyup="keyUpHandle($event)"
-        @keydown="keyDownHandle($event)"
+        v-model="numberModel"
+        :mask="Number"
+        radix="."
+        :mapToRadix="[',']"
+        :scale="18"
+        @accept:masked="onAccept"
+        @accept:unmasked="onAcceptUnmasked"
       />
 
       <AppButton field @click="setMax" v-if="displayMaxButton">Max</AppButton>
@@ -42,41 +45,52 @@ import SwapField from '@/components/SwapField.vue';
 import { shrinkDecimals } from '@/utils/formatNumber';
 import { bigNumberMin } from '@/utils/math';
 import { computed } from 'vue';
+import { IMaskComponent } from 'vue-imask';
 
 const emit = defineEmits(['update:modelValue']);
 
-const keyDownHandle = (event) => {
-  const key = event.key;
-  const keyCode = event.keyCode;
+const numberModel = '';
 
-  const allowedKeycodes = [8, 16, 37, 39, 190, 188];
-  const isAllowedKey = allowedKeycodes.includes(keyCode);
-  const isValidKey = /[0-9]|\./.test(key) || isAllowedKey;
-
-  const inputValue = event.target.value;
-  const pointPosition = inputValue.indexOf('.');
-
-  const decimals = inputValue.substring(pointPosition + 1);
-  const decimalsLength = decimals.length + 1;
-  const tooManyDecimals = decimalsLength > 18;
-
-  if (keyCode === 188 && pointPosition < 0) {
-    emit('update:modelValue', `${inputValue}.`);
-    event.preventDefault();
-  }
-
-  if (
-    !isValidKey ||
-    (tooManyDecimals && !isAllowedKey) ||
-    ((keyCode === 188 || keyCode === 190) && pointPosition > 0)
-  ) {
-    event.preventDefault();
-  }
+const onAccept = (value) => {
+  console.log(value);
 };
 
-const keyUpHandle = (event) => {
-  emit('update:modelValue', event.target.value);
+const onAcceptUnmasked = (unmaskedValue) => {
+  console.log(unmaskedValue);
 };
+
+// const keyDownHandle = (event) => {
+//   const key = event.key;
+//   const keyCode = event.keyCode;
+
+//   const allowedKeycodes = [8, 16, 37, 39, 190, 188];
+//   const isAllowedKey = allowedKeycodes.includes(keyCode);
+//   const isValidKey = /[0-9]|\./.test(key) || isAllowedKey;
+
+//   const inputValue = event.target.value;
+//   const pointPosition = inputValue.indexOf('.');
+
+//   const decimals = inputValue.substring(pointPosition + 1);
+//   const decimalsLength = decimals.length + 1;
+//   const tooManyDecimals = decimalsLength > 18;
+
+//   if (keyCode === 188 && pointPosition < 0) {
+//     emit('update:modelValue', `${inputValue}.`);
+//     event.preventDefault();
+//   }
+
+//   if (
+//     !isValidKey ||
+//     (tooManyDecimals && !isAllowedKey) ||
+//     ((keyCode === 188 || keyCode === 190) && pointPosition > 0)
+//   ) {
+//     event.preventDefault();
+//   }
+// };
+
+// const keyUpHandle = (event) => {
+//   emit('update:modelValue', event.target.value);
+// };
 
 const props = defineProps({
   modelValue: [String, Number],
