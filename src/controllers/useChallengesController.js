@@ -17,6 +17,8 @@ export default () => {
 
   // INIT CHALLENGES
   const initList = async () => {
+    challengesRepository.flush();
+
     const event = 'ChallengeStarted';
     const requestedChallenges = await fetchInfura(event);
 
