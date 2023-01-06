@@ -94,7 +94,6 @@
         size="small"
         :to="bidUrl"
         :loading="pending"
-        :disabled="!auth.isConnected"
       >
         Bid
       </AppButton>
@@ -131,8 +130,13 @@ const bidUrl = computed(
 
 const closeChallenge = async (index) => {
   pending.value = true;
+
   const tx = await endChallenge(index);
-  if (!tx.error) await reload();
+
+  if (!tx.error) {
+    await reload();
+  }
+
   pending.value = false;
 };
 </script>

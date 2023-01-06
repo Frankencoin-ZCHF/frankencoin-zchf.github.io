@@ -11,14 +11,16 @@ export default async (index) => {
 
   const transaction = async () => await contract.end(index);
 
-  const callback = (tx) => {
+  const tx = await executeTransaction(transaction);
+
+  if (!tx.error) {
     addNotification({
       type: 'success',
       title: 'Challenge closed!',
       linkUrl: `${config.etherscanUrl}/tx/${tx.hash}`,
       linkLabel: 'See transaction',
     });
-  };
+  }
 
-  return await executeTransaction(transaction, callback);
+  return tx;
 };
