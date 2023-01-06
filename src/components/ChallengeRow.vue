@@ -20,18 +20,22 @@
           <DisplayAmount
             :inline="true"
             :amount="challenge.bid"
-            :currency="challenge.position.collateral.symbol"
-            :currencyAddress="challenge.position.collateral.address"
+            :currency="frankencoin.symbol"
+            :currencyAddress="frankencoin.address"
           />
-          <div class="text-sm" v-if="challenge.ratio > 0">
-            {{ challenge.position.collateral.price }}
-            1 {{ challenge.position.collateral.symbol }} =
-
+          <div class="text-sm" v-if="bigNumberCompare('>', challenge.ratio, 0)">
+            <DisplayAmount
+              :inline="true"
+              :amount="1"
+              :currency="challenge.position.collateral.symbol"
+              :bold="false"
+            />
+            =
             <DisplayAmount
               :inline="true"
               :amount="challenge.ratio"
-              currency="ZCHF"
-              :currencyAddress="challenge.position.collateral.address"
+              :currency="frankencoin.symbol"
+              :bold="false"
             />
           </div>
         </div>
@@ -75,7 +79,9 @@
         full
         size="small"
         :loading="pending"
-        :disabled="!auth.isConnected"
+        :disabled="
+          !auth.isConnected || auth.chainId != blockchain.targetChainId
+        "
         @click="closeChallenge(challenge.index)"
       >
         Close
@@ -97,18 +103,19 @@
 </template>
 
 <script setup>
-import { computed, ref, inject } from 'vue';
-
-import endChallenge from '@/transactions/endChallenge';
-
-import AppTableRow from '@/components/AppTableRow.vue';
-import AppTableHeaderMobile from '@/components/AppTableHeaderMobile.vue';
 import AppButton from '@/components/AppButton.vue';
-import DisplayAmount from '@/components/DisplayAmount.vue';
+import AppTableHeaderMobile from '@/components/AppTableHeaderMobile.vue';
+import AppTableRow from '@/components/AppTableRow.vue';
 import ChallengeState from '@/components/ChallengeState.vue';
+import DisplayAmount from '@/components/DisplayAmount.vue';
+import blockchain from '@/config';
+import endChallenge from '@/transactions/endChallenge';
+import { bigNumberCompare } from '@/utils/math';
+import { computed, inject, ref } from 'vue';
 
 const auth = inject('auth');
 const reload = inject('reload');
+const frankencoin = inject('frankencoin');
 
 const pending = ref(false);
 

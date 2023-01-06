@@ -19,6 +19,12 @@ module.exports = {
     ecmaVersion: 'latest',
     sourceType: 'module',
   },
+  rules: {
+    'sort-imports': [
+      'error',
+      { ignoreCase: true, ignoreDeclarationSort: true },
+    ],
+  },
   overrides: [
     {
       files: ['cypress/e2e/**.{cy,spec}.{js,ts,jsx,tsx}'],

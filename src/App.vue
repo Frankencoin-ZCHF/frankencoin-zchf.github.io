@@ -13,18 +13,14 @@
 </template>
 
 <script setup>
-import { provide } from 'vue';
-
 import useAuth from '@/auth';
-
+import AppNotificationsGroup from '@/components/AppNotificationsGroup.vue';
+import TheFooter from '@/components/TheFooter.vue';
+import TheHeader from '@/components/TheHeader.vue';
 import useDialog from '@/composables/useDialog';
 import useLoading from '@/composables/useLoading';
-
 import useAppController from '@/controllers/useAppController';
-
-import AppNotificationsGroup from '@/components/AppNotificationsGroup.vue';
-import TheHeader from '@/components/TheHeader.vue';
-import TheFooter from '@/components/TheFooter.vue';
+import { provide } from 'vue';
 
 const { loading } = useLoading();
 const auth = useAuth();

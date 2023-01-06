@@ -1,5 +1,5 @@
-import { STABLECOINBRIDGE_ABI, addresses } from '@/contracts/dictionnary';
 import useFetcher from '@/composables/useFetcher';
+import { addresses, STABLECOINBRIDGE_ABI } from '@/contracts/dictionnary';
 
 export default () => {
   const fetcher = useFetcher(addresses.bridge, STABLECOINBRIDGE_ABI);

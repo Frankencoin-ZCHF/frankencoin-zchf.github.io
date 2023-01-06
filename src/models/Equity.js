@@ -1,3 +1,4 @@
+import { fixedNumberOperate } from '../utils/math';
 import Token from './Token';
 
 export default class Equity extends Token {
@@ -8,15 +9,15 @@ export default class Equity extends Token {
     return {
       ...super.fields(),
 
-      price: this.number(null),
-      totalSupply: this.number(null),
-      totalVotes: this.number(null),
+      price: this.string(null),
+      totalSupply: this.string(null),
+      totalVotes: this.string(null),
     };
   }
 
   get marketCap() {
-    return this.totalSupply === null || this.price === null
-      ? null
-      : this.totalSupply * this.price;
+    if (this.totalSupply === null || this.price === null) return null;
+
+    return fixedNumberOperate('*', this.totalSupply, this.price);
   }
 }

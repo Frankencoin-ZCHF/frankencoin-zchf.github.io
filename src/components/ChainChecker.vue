@@ -13,9 +13,9 @@
 </template>
 
 <script setup>
-import { computed } from 'vue';
-import blockchain from '@/config';
 import useAuth from '@/auth';
+import blockchain from '@/config';
+import { computed } from 'vue';
 
 const auth = useAuth();
 

@@ -1,8 +1,8 @@
-import { ethers } from 'ethers';
 import useAuth from '@/auth';
 import blockchain from '@/config';
-import WalletConnectProvider from '@walletconnect/web3-provider';
 import detectEthereumProvider from '@metamask/detect-provider';
+import WalletConnectProvider from '@walletconnect/web3-provider';
+import { ethers } from 'ethers';
 
 export default () => {
   const auth = useAuth();

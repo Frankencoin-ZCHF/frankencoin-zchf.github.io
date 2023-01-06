@@ -1,10 +1,12 @@
 <template>
   <span>
-    <template v-if="!formattedValue">-</template>
+    <template v-if="!amount">-</template>
     <template v-else>
-      <span :class="{ 'font-bold': bold, 'text-3xl': big }">{{
-        formattedValue
-      }}</span>
+      <span :class="{ 'font-bold': bold, 'text-3xl': big }">
+        {{
+          noRounding ? formatCommify(amount) : formatCurrency(amount, digits)
+        }}
+      </span>
 
       <template v-if="currency != '%'">&nbsp;</template>
 
@@ -26,24 +28,26 @@
 </template>
 
 <script setup>
-import { computed } from 'vue';
-import { formatCurrency } from '@/utils/formatNumber';
-import { contractUrl } from '@/utils/address.js';
 import AppButton from '@/components/AppButton.vue';
+import { contractUrl } from '@/utils/address.js';
+import { formatCommify, formatCurrency } from '@/utils/formatNumber';
 
-const props = defineProps({
-  amount: [Number],
+defineProps({
+  amount: [String, Number],
   currency: String,
   currencyAddress: String,
-  digits: Number,
+  digits: {
+    type: Number,
+    default: 2,
+  },
   bold: {
     type: Boolean,
     default: true,
   },
+  noRounding: {
+    type: Boolean,
+    default: false,
+  },
   big: Boolean,
-});
-
-const formattedValue = computed(() => {
-  return formatCurrency(props.amount, props.digits);
 });
 </script>

@@ -38,8 +38,9 @@
 </template>
 
 <script setup>
-import { computed } from 'vue';
 import useNotification from '@/composables/useNotification';
+import { computed } from 'vue';
+
 import AppButton from './AppButton.vue';
 
 const props = defineProps({

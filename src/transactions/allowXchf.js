@@ -1,7 +1,6 @@
-import { MOCKXCHFTOKEN_ABI, addresses } from '@/contracts/dictionnary';
-
-import useContract from '@/composables/useContract';
 import useAllowance from '@/composables/useAllowance';
+import useContract from '@/composables/useContract';
+import { addresses, MOCKXCHFTOKEN_ABI } from '@/contracts/dictionnary';
 
 export default async (spender, amount) => {
   const { contract } = useContract(addresses.stableCoin, MOCKXCHFTOKEN_ABI);

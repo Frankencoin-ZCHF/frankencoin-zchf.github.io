@@ -1,8 +1,7 @@
-import { Repository, useRepo } from 'pinia-orm';
-import { ethers } from 'ethers';
 import { addresses } from '@/contracts/dictionnary';
-
 import Frankencoin from '@/models/Frankencoin';
+import { ethers } from 'ethers';
+import { Repository, useRepo } from 'pinia-orm';
 
 class FrankencoinRepository extends Repository {
   use = Frankencoin;

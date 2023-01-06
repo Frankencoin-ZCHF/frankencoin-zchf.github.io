@@ -1,3 +1,4 @@
+import { fixedNumberOperate } from '../utils/math';
 import Token from './Token';
 
 export default class Frankencoin extends Token {
@@ -8,15 +9,15 @@ export default class Frankencoin extends Token {
     return {
       ...super.fields(),
 
-      minterReserve: this.number(null),
-      equity: this.number(null),
-      totalSupply: this.number(null),
+      minterReserve: this.string(null),
+      equity: this.string(null),
+      totalSupply: this.string(null),
     };
   }
 
   get totalReserve() {
-    return this.minterReserve === null && this.equity === null
-      ? null
-      : this.minterReserve + this.equity;
+    if (this.minterReserve === null && this.equity === null) return null;
+
+    return fixedNumberOperate('*', this.minterReserve, this.equity);
   }
 }

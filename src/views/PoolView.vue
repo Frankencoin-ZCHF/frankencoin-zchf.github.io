@@ -67,6 +67,7 @@
             <DisplayLabel label="Your shares">
               <DisplayAmount
                 :amount="auth.user.FPS"
+                :digits="5"
                 currency="FPS"
                 :currencyAddress="addresses.equity"
             /></DisplayLabel>
@@ -75,7 +76,10 @@
           <AppBox>
             <DisplayLabel label="Your shares value">
               <DisplayAmount
-                :amount="auth.user.FPSValue"
+                :amount="
+                  auth.isConnected && !wrongChain ? auth.user.FPSValue : 0
+                "
+                :digits="5"
                 currency="ZCHF"
                 :currencyAddress="addresses.frankencoin"
               />
@@ -84,7 +88,13 @@
 
           <AppBox class="flex-1">
             <DisplayLabel label="Voting Power">
-              <DisplayAmount :amount="auth.user.votingPower" currency="%" />
+              <DisplayAmount
+                :amount="
+                  auth.isConnected && !wrongChain ? auth.user.votingPower : 0
+                "
+                :digits="5"
+                currency="%"
+              />
             </DisplayLabel>
             <p>
               A minimum of 3% of the total supply is required to obtain veto
@@ -101,18 +111,20 @@
 </template>
 
 <script setup>
-import { inject } from 'vue';
-import { addresses } from '@/contracts/dictionnary';
-
-import AppPageHeader from '@/components/AppPageHeader.vue';
 import AppBox from '@/components/AppBox.vue';
 import AppLoading from '@/components/AppLoading.vue';
-import DisplayLabel from '@/components/DisplayLabel.vue';
+import AppPageHeader from '@/components/AppPageHeader.vue';
 import DisplayAmount from '@/components/DisplayAmount.vue';
+import DisplayLabel from '@/components/DisplayLabel.vue';
 import SwapBoxFps from '@/components/SwapBoxFps.vue';
+import blockchain from '@/config';
+import { addresses } from '@/contracts/dictionnary';
+import { computed, inject } from 'vue';
 
 const frankencoin = inject('frankencoin');
 const equity = inject('equity');
 const auth = inject('auth');
 const loading = inject('loading');
+
+const wrongChain = computed(() => auth.chainId != blockchain.targetChainId);
 </script>

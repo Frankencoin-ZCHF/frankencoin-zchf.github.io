@@ -6,6 +6,6 @@ export default async (amount) => {
   if (amount.value) {
     return await equityFetcher.calculateShares(amount);
   } else {
-    return 0;
+    return '0';
   }
 };

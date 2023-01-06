@@ -1,8 +1,7 @@
 import useContract from '@/composables/useContract';
 import useLoading from '@/composables/useLoading';
-
-import { dec18ToFloat } from '@/utils/math';
 import { dateFormatter } from '@/utils/date';
+import { dec18ToString } from '@/utils/math';
 import { ethers } from 'ethers';
 
 export default (address, abi) => {
@@ -21,6 +20,7 @@ export default (address, abi) => {
     } else if (typeof arg == 'object') {
       config.method = arg.method;
       config.formatter = arg.formatter;
+      config.decimals = arg.decimals ? arg.decimals.value : 18;
       config.params = arg.params;
       config.fromUser = arg.fromUser;
     }
@@ -40,7 +40,7 @@ export default (address, abi) => {
 
     switch (config.formatter) {
       case 'amount':
-        return dec18ToFloat(value);
+        return dec18ToString(value, config.decimals);
       case 'address':
         return ethers.utils.getAddress(value);
       case 'number':

@@ -36,16 +36,13 @@
 </template>
 
 <script setup>
-import { computed, inject } from 'vue';
-
-import useChallengesRepository from '@/repositories/useChallengesRepository';
-
+import AppLoading from '@/components/AppLoading.vue';
 import AppPageHeader from '@/components/AppPageHeader.vue';
-
 import AppTable from '@/components/AppTable.vue';
 import AppTableRow from '@/components/AppTableRow.vue';
-import AppLoading from '@/components/AppLoading.vue';
 import ChallengeRow from '@/components/ChallengeRow.vue';
+import useChallengesRepository from '@/repositories/useChallengesRepository';
+import { computed, inject } from 'vue';
 
 const auth = inject('auth');
 const loading = inject('loading');

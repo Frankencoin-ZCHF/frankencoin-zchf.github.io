@@ -1,5 +1,5 @@
-import { ref } from 'vue';
 import Timeout from 'smart-timeout';
+import { ref } from 'vue';
 
 const notifications = ref([]);
 

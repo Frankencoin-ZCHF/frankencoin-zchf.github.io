@@ -1,5 +1,5 @@
-import { MINTINGHUB_ABI, addresses } from '@/contracts/dictionnary';
 import useFetcher from '@/composables/useFetcher';
+import { addresses, MINTINGHUB_ABI } from '@/contracts/dictionnary';
 
 export default () => {
   const fetcher = useFetcher(addresses.mintingHub, MINTINGHUB_ABI);

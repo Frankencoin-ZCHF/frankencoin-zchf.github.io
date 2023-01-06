@@ -21,6 +21,7 @@
 
 <script setup>
 import { computed } from 'vue';
+
 import AppIcon from './AppIcon.vue';
 
 const emit = defineEmits(['click']);

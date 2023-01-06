@@ -1,13 +1,12 @@
 import useNotification from '@/composables/useNotification';
 import useTransaction from '@/composables/useTransaction';
+import { stringToDec18 } from '@/utils/math';
 
-import { floatToDec18 } from '@/utils/math';
-
-export default async (contract, spender, amount) => {
+export default async (contract, spender, amount, decimals) => {
   const { executeTransaction } = useTransaction();
   const { addNotification } = useNotification();
 
-  const dAmount = floatToDec18(amount);
+  const dAmount = stringToDec18(amount, decimals);
 
   const transaction = async () => await contract.approve(spender, dAmount);
 

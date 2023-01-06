@@ -1,6 +1,6 @@
-import { Repository, useRepo } from 'pinia-orm';
-import Challenge from '@/models/Challenge';
 import useAuth from '@/auth';
+import Challenge from '@/models/Challenge';
+import { Repository, useRepo } from 'pinia-orm';
 
 class ChallengesRepository extends Repository {
   use = Challenge;

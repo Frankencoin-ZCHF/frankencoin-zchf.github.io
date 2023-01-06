@@ -1,6 +1,6 @@
-import { Repository, useRepo } from 'pinia-orm';
-import Position from '@/models/Position';
 import useAuth from '@/auth';
+import Position from '@/models/Position';
+import { Repository, useRepo } from 'pinia-orm';
 
 class PositionsRepository extends Repository {
   use = Position;
@@ -26,13 +26,15 @@ class PositionsRepository extends Repository {
   }
 
   getAllPositions() {
-    return this
-    // if we remove our own position, 'all' is not correct
-    //return this.where('ownerAddress', (value) => {
-    //  return value != this.auth.wallet;
-    // })
-      .with('collateral')
-      .get();
+    if (this.auth.isConnected) {
+      return this.where('ownerAddress', (value) => {
+        return value != this.auth.wallet;
+      })
+        .with('collateral')
+        .get();
+    } else {
+      return this.with('collateral').get();
+    }
   }
 }
 

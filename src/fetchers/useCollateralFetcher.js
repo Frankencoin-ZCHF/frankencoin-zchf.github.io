@@ -1,8 +1,10 @@
-import { IERC20_ABI } from '@/contracts/dictionnary';
 import useFetcher from '@/composables/useFetcher';
+import { IERC20_ABI } from '@/contracts/dictionnary';
+import { ref } from 'vue';
 
 export default (address) => {
   const fetcher = useFetcher(address, IERC20_ABI);
+  let decimals = ref(18);
 
   const all = async () => {
     const requests = {
@@ -14,15 +16,22 @@ export default (address) => {
         method: 'symbol',
         formatter: 'text',
       },
+      decimals: {
+        method: 'decimals',
+        formatter: 'number',
+      },
     };
 
-    return await fetcher.all(requests);
+    const data = await fetcher.all(requests);
+    decimals.value = data.decimals;
+    return data;
   };
 
   const getBalance = async (address) => {
     return await fetcher.one({
       method: 'balanceOf',
       formatter: 'amount',
+      decimals: decimals,
       params: [address],
     });
   };
@@ -31,6 +40,7 @@ export default (address) => {
     return await fetcher.one({
       method: 'allowance',
       formatter: 'amount',
+      decimals: decimals,
       params: [owner, spender],
     });
   };

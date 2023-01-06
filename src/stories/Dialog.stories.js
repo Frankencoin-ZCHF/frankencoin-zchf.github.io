@@ -1,5 +1,5 @@
-import AppDialog from '../components/AppDialog.vue';
 import AppButton from '../components/AppButton.vue';
+import AppDialog from '../components/AppDialog.vue';
 import useDialog from '../composables/useDialog';
 
 export default {

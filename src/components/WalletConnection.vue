@@ -14,7 +14,7 @@
           <AppButton secondary full @click="handleClick('metamask')">
             <span class="flex gap-4">
               <img src="/icons/metamask.svg" class="h-5 w-5" />
-              metamask
+              Metamask
             </span>
           </AppButton>
 
@@ -41,17 +41,14 @@
 </template>
 
 <script setup>
-import { inject } from 'vue';
-
-import blockchain from '@/config';
 import useAuth from '@/auth';
-
-import useWallet from '@/composables/useWallet';
 import AppButton from '@/components/AppButton.vue';
 import AppDialog from '@/components/AppDialog.vue';
 import AppIcon from '@/components/AppIcon.vue';
-
+import useWallet from '@/composables/useWallet';
+import blockchain from '@/config';
 import { shortenAddress } from '@/utils/address.js';
+import { inject } from 'vue';
 
 const auth = useAuth();
 

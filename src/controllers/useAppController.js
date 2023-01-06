@@ -1,21 +1,17 @@
-import { provide, computed, watch } from 'vue';
-import { addresses } from '@/contracts/dictionnary';
+import useAuth from '@/auth';
 import blockchain from '@/config';
-
-import usePositionsController from '@/controllers/usePositionsController';
+import { addresses } from '@/contracts/dictionnary';
 import useChallengesController from '@/controllers/useChallengesController';
-
-import useFrankencoinFetcher from '@/fetchers/useFrankencoinFetcher';
-import useEquityFetcher from '@/fetchers/useEquityFetcher';
-import useStablecoinFetcher from '@/fetchers/useStablecoinFetcher';
+import usePositionsController from '@/controllers/usePositionsController';
 import useBridgeFetcher from '@/fetchers/useBridgeFetcher';
-
-import useFrankencoinRepository from '@/repositories/useFrankencoinRepository';
+import useEquityFetcher from '@/fetchers/useEquityFetcher';
+import useFrankencoinFetcher from '@/fetchers/useFrankencoinFetcher';
+import useStablecoinFetcher from '@/fetchers/useStablecoinFetcher';
 import useEquityRepository from '@/repositories/useEquityRepository';
+import useFrankencoinRepository from '@/repositories/useFrankencoinRepository';
 import useStablecoinRepository from '@/repositories/useStablecoinRepository';
 import useUsersRepository from '@/repositories/useUsersRepository';
-
-import useAuth from '@/auth';
+import { computed, provide, watch } from 'vue';
 
 export default () => {
   const auth = useAuth();

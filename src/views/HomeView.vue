@@ -34,8 +34,8 @@
         principle, it supports any collateral with sufficient availability on
         the market. However, its liquidation mechanism is slower than that of
         other collaterlized stablecoins, making it less suitable for highly
-        volatile types of collateral. The name is inspired by the
-        system's self-governing nature.
+        volatile types of collateral. The name is inspired by the system's
+        self-governing nature.
       </p>
     </div>
 
@@ -70,12 +70,13 @@
     <h2 class="text-2xl font-bold">Frankencoin Token</h2>
     <p>
       Frankencoin is a freely transferrable stablecoin that follows the ERC-20
-      standard. It can be minted by anyone who provides the necessary collateral.
-      Its peg to the Swiss franc is not technically enforced, but relies on the
-      economics of the system. In essence, the system is most valuable when the
-      Frankencoin tracks the value of the Swiss franc, so those who benefit from
-      the system being valuable have an incentive to make that happen. Those who
-      benefit are the holders of Frankencoin Pool Shares (FPS).
+      standard. It can be minted by anyone who provides the necessary
+      collateral. Its peg to the Swiss franc is not technically enforced, but
+      relies on the economics of the system. In essence, the system is most
+      valuable when the Frankencoin tracks the value of the Swiss franc, so
+      those who benefit from the system being valuable have an incentive to make
+      that happen. Those who benefit are the holders of Frankencoin Pool Shares
+      (FPS).
     </p>
 
     <div class="grid gap-1 lg:grid-cols-3">
@@ -157,20 +158,22 @@
     <h2 class="text-2xl font-bold">Reserve Pool Shares</h2>
     <p>
       The Frankencoin system receives income in the form of fees, and it can
-      incur losses in case a collateral proved to be insufficient. These go
-      into a reserve pool. If the 
-      Frankencoin system was a company, this reserve pool would be called
+      incur losses in case a collateral proved to be insufficient. These go into
+      a reserve pool. If the Frankencoin system was a company, this reserve pool
+      would be called
       <em>equity</em>. It accumulates profits and absorbs losses. Anyone can
       contribute to the reserve pool, thereby getting freshly minted Frankencoin
       Pool Share (FPS) tokens. Anyone who held onto their FPS tokens for long
-      enough, namely at least 90 days, can also redeem them again against 
+      enough, namely at least 90 days, can also redeem them again against
       Frankencoins from the reserve pool at any time. If the Frankencoin's
-      equity has grown in the meantime, you will make a profit (and a loss
-      if it declined). Essentially, this is a system of continuous issuance
-      and redemption inspired by the idea of the <a href="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4189472">
-        Continuous Capital Corporation</a>. Holders of reserve pool shares 
-        enjoy veto power for new minting mechanisms as long as they have
-        at least 3% of the time-weighted outstanding shares.
+      equity has grown in the meantime, you will make a profit (and a loss if it
+      declined). Essentially, this is a system of continuous issuance and
+      redemption inspired by the idea of the
+      <a href="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4189472">
+        Continuous Capital Corporation</a
+      >. Holders of reserve pool shares enjoy veto power for new minting
+      mechanisms as long as they have at least 3% of the time-weighted
+      outstanding shares.
     </p>
 
     <div class="grid gap-1 lg:grid-cols-3">
@@ -199,7 +202,7 @@
           <DisplayLabel label="Total Supply">
             <DisplayAmount
               :amount="equity.totalSupply"
-              currency=FPS
+              currency="FPS"
               :currencyAddress="equity.address"
               big
             />
@@ -208,7 +211,12 @@
 
         <AppBox>
           <DisplayLabel label="Your Balance">
-            <DisplayAmount :amount="auth.user.FPS" currency=FPS :currencyAddress="equity.address" big />
+            <DisplayAmount
+              :amount="auth.user.FPS"
+              currency="FPS"
+              :currencyAddress="equity.address"
+              big
+            />
           </DisplayLabel>
         </AppBox>
 
@@ -247,14 +255,18 @@
 
     <h2 class="text-2xl font-bold">Stablecoin Conversion</h2>
     <p>
-      Bridge contracts allow to convert other Swiss Franc stablecoins 1:1
-      into Frankencoins and also back again as long as there are some left. The
-      deposited stablecoins are kept in the bridge until another user wants
-      to convert ZCHF back into the resprective stablecoin.
-      For now, the only bridge is the one to the <a href="https://www.bitcoinsuisse.com/cryptofranc">Crypto Franc (XCHF)</a>.
+      Bridge contracts allow to convert other Swiss Franc stablecoins 1:1 into
+      Frankencoins and also back again as long as there are some left. The
+      deposited stablecoins are kept in the bridge until another user wants to
+      convert ZCHF back into the resprective stablecoin. For now, the only
+      bridge is the one to the
+      <a href="https://www.bitcoinsuisse.com/cryptofranc">Crypto Franc (XCHF)</a
+      >.
     </p>
 
-    <a href="http://localhost:5173/swap"><h3 class="text-xl font-bold">CryptoFranc (XCHF)</h3></a>
+    <a href="http://localhost:5173/swap"
+      ><h3 class="text-xl font-bold">CryptoFranc (XCHF)</h3></a
+    >
 
     <div class="grid gap-1 lg:grid-cols-3">
       <div class="grid gap-1 sm:grid-cols-2 lg:col-span-2">
@@ -314,13 +326,13 @@
       ZCHF once the initialization period has passed. Positions that are not
       sufficiently collateralized can be challenged by anyone through an auction
       mechanism. When challenging a position, the challenger must provide some
-      of the collateral to be auctioned off. If the highest bid in the subsequent auction is high
-      enough to show that the position is sufficiently collateralized, the
-      challenge is averted and the bidder gets the challengers collateral in
-      exchange for the highest bid. If the highest bid is lower, the challenge
-      is considered successful, the bidder gets the collateral from the position
-      and the position is closed, distributing excess proceeds to the reserve
-      and paying a reward to the challenger.
+      of the collateral to be auctioned off. If the highest bid in the
+      subsequent auction is high enough to show that the position is
+      sufficiently collateralized, the challenge is averted and the bidder gets
+      the challengers collateral in exchange for the highest bid. If the highest
+      bid is lower, the challenge is considered successful, the bidder gets the
+      collateral from the position and the position is closed, distributing
+      excess proceeds to the reserve and paying a reward to the challenger.
     </p>
 
     <PositionsView></PositionsView>
@@ -341,20 +353,16 @@
 </template>
 
 <script setup>
-import { inject } from 'vue';
-
-import { contractUrl, shortenAddress } from '@/utils/address.js';
-import { addresses } from '@/contracts/dictionnary';
-
 import useAuth from '@/auth';
-
-import PositionsView from '@/views/PositionsView.vue';
-
-import AppPageHeader from '@/components/AppPageHeader.vue';
-import AppButton from '@/components/AppButton.vue';
 import AppBox from '@/components/AppBox.vue';
-import DisplayLabel from '@/components/DisplayLabel.vue';
+import AppButton from '@/components/AppButton.vue';
+import AppPageHeader from '@/components/AppPageHeader.vue';
 import DisplayAmount from '@/components/DisplayAmount.vue';
+import DisplayLabel from '@/components/DisplayLabel.vue';
+import { addresses } from '@/contracts/dictionnary';
+import { contractUrl, shortenAddress } from '@/utils/address.js';
+import PositionsView from '@/views/PositionsView.vue';
+import { inject } from 'vue';
 
 const auth = useAuth();
 

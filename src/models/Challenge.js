@@ -1,6 +1,7 @@
+import Position from '@/models/Position';
+import User from '@/models/User';
+import { fixedNumberOperate } from '@/utils/math';
 import { Model } from 'pinia-orm';
-import Position from './Position';
-import User from './User';
 
 export default class Challenge extends Model {
   static entity = 'challenges';
@@ -9,8 +10,8 @@ export default class Challenge extends Model {
   static fields() {
     return {
       index: this.uid(),
-      size: this.number(null),
-      bid: this.number(null),
+      size: this.string(null),
+      bid: this.string(null),
       end: this.attr(null),
 
       bidderAddress: this.string(null),
@@ -24,11 +25,14 @@ export default class Challenge extends Model {
   }
 
   get buyNowPrice() {
-    if (this.position) return this.position.price * this.size;
+    if (this.position) {
+      return fixedNumberOperate('*', this.position.price, this.size);
+    }
+
     return null;
   }
 
   get ratio() {
-    return this.bid / this.size;
+    return fixedNumberOperate('/', this.bid, this.size);
   }
 }

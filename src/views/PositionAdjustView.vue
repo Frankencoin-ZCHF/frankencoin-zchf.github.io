@@ -7,16 +7,16 @@
 
   <section class="mx-auto flex max-w-2xl flex-col gap-y-4 px-4 sm:px-8">
     <AppBox>
-      <AppForm v-if="!loading">
+      <AppForm v-if="!loading && position">
         <div class="space-y-12">
           <div class="space-y-4">
             <SwapFieldInput
-              v-model.number="mintedInput"
+              v-model="mintedInput"
               label="Amount"
-              :max="auth.user.ZCHF"
-              :limit="repayPosition"
-              :fromWallet="true"
-              symbol="ZCHF"
+              :max="repayPosition"
+              :fromWallet="false"
+              :symbol="frankencoin.symbol"
+              :decimals="frankencoin.decimals"
             >
               <template v-slot:action>
                 <button
@@ -37,33 +37,39 @@
                 <DisplayAmount
                   :bold="false"
                   :amount="position.minted"
-                  currency="ZCHF"
+                  :currency="frankencoin.symbol"
+                  :currencyAddress="frankencoin.address"
                 />
               </div>
 
               <div class="flex">
                 <div class="flex-1">{{ paidOutToWalletLabel }}:</div>
-
                 <DisplayAmount
                   :bold="false"
-                  :amount="paidOutToWalletAmount"
-                  currency="ZCHF"
+                  :amount="mintedInput ? paidOutToWalletAmount : null"
+                  :currency="frankencoin.symbol"
+                  :currencyAddress="frankencoin.address"
                 />
               </div>
 
               <div class="flex">
                 <div class="flex-1">{{ reserveContributionLabel }}:</div>
-
                 <DisplayAmount
                   :bold="false"
-                  :amount="borrowersReserveContribution"
-                  currency="ZCHF"
+                  :amount="mintedInput ? borrowersReserveContribution : null"
+                  :currency="frankencoin.symbol"
+                  :currencyAddress="frankencoin.address"
                 />
               </div>
 
               <div class="flex font-bold" v-if="!isNegativeDifference">
                 <div class="flex-1">Fee</div>
-                <DisplayAmount :bold="false" :amount="fees" currency="ZCHF" />
+                <DisplayAmount
+                  :bold="false"
+                  :amount="mintedInput ? fees : null"
+                  :currency="frankencoin.symbol"
+                  :currencyAddress="frankencoin.address"
+                />
               </div>
 
               <hr />
@@ -72,20 +78,22 @@
                 <div class="flex-1">New amount</div>
                 <DisplayAmount
                   :bold="false"
-                  :amount="mintedInput ? mintedInput : 0"
-                  currency="ZCHF"
+                  :amount="mintedInput"
+                  :currency="frankencoin.symbol"
+                  :currencyAddress="frankencoin.address"
                 />
               </div>
             </div>
           </div>
           <div class="space-y-4">
             <SwapFieldInput
-              v-model.number="collateralInput"
+              v-model="collateralInput"
               label="Collateral"
               :max="auth.user.tokens[position.collateralAddress]?.amount"
               :showWallet="true"
               :symbol="position.collateral.symbol"
               :note="collateralNote"
+              :decimals="position.collateral.decimals"
             >
               <template v-slot:action>
                 <button
@@ -102,13 +110,15 @@
 
           <div class="space-y-4">
             <SwapFieldInput
-              v-model.number="liquidationPriceInput"
+              v-model="liquidationPriceInput"
               label="Liquidation price"
               :max="position.price"
               :maxInput="false"
-              :showWallet="true"
-              symbol="ZCHF"
+              :fromWallet="false"
+              :hideMaxLabel="true"
+              :symbol="frankencoin.symbol"
               :note="liquidationPriceNote"
+              :decimals="frankencoin.decimals"
             >
               <template v-slot:action>
                 <button
@@ -130,26 +140,32 @@
 </template>
 
 <script setup>
-import { provide, ref, computed, watch, inject } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
-
-import usePositionsRepository from '@/repositories/usePositionsRepository';
-import useUsersRepository from '@/repositories/useUsersRepository';
-
-import collateralApprove from '@/transactions/collateralApprove';
-import adjustPosition from '@/transactions/adjustPosition';
-
-import AppPageHeader from '@/components/AppPageHeader.vue';
 import AppBox from '@/components/AppBox.vue';
-import AppLoading from '@/components/AppLoading.vue';
 import AppForm from '@/components/AppForm.vue';
+import AppLoading from '@/components/AppLoading.vue';
+import AppPageHeader from '@/components/AppPageHeader.vue';
+import DisplayAmount from '@/components/DisplayAmount.vue';
 import IconMagic from '@/components/icons/IconMagic.vue';
 import SwapFieldInput from '@/components/SwapFieldInput.vue';
-import DisplayAmount from '@/components/DisplayAmount.vue';
+import usePositionsRepository from '@/repositories/usePositionsRepository';
+import useUsersRepository from '@/repositories/useUsersRepository';
+import adjustPosition from '@/transactions/adjustPosition';
+import collateralApprove from '@/transactions/collateralApprove';
+import { formatCommify, formatDecimals } from '@/utils/formatNumber';
+import {
+  bigNumberAbs,
+  bigNumberCompare,
+  bigNumberMax,
+  bigNumberOperate,
+  fixedNumberOperate,
+} from '@/utils/math';
+import { computed, inject, provide, ref, watch } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 
 const auth = inject('auth');
 const loading = inject('loading');
 const reload = inject('reload');
+const frankencoin = inject('frankencoin');
 
 const route = useRoute();
 const router = useRouter();
@@ -167,89 +183,150 @@ const liquidationPriceInput = ref(null);
 
 const pending = ref(false);
 
-const repayPosition = computed(() =>
-  Math.max(0, position.value.minted - auth.user.ZCHF)
-);
-
-const allowed = computed(() => {
-  return auth.user.allowances[address] >= collateralInput.value;
+const repayPosition = computed(() => {
+  return bigNumberMax(
+    0,
+    bigNumberOperate('-', position.value.minted, auth.user.ZCHF)
+  );
 });
+
+const allowed = computed(() =>
+  bigNumberCompare('>=', auth.user.allowances[address], collateralInput.value)
+);
 
 const autoFill = (origin) => {
   switch (origin) {
     case 'minted':
-      mintedInput.value = collateralInput.value * liquidationPriceInput.value;
+      mintedInput.value = fixedNumberOperate(
+        '*',
+        collateralInput.value,
+        liquidationPriceInput.value
+      );
       break;
     case 'collateral':
-      collateralInput.value = Math.max(
-        mintedInput.value / liquidationPriceInput.value,
+      collateralInput.value = bigNumberMax(
+        fixedNumberOperate('/', mintedInput.value, liquidationPriceInput.value),
         position.value.minimumCollateral
       );
       break;
     case 'liquidation':
-      liquidationPriceInput.value =
-        collateralInput.value === 0
-          ? 0
-          : mintedInput.value / collateralInput.value;
+      liquidationPriceInput.value = bigNumberCompare(
+        '=',
+        collateralInput.value,
+        0
+      )
+        ? '0'
+        : fixedNumberOperate('/', mintedInput.value, collateralInput.value);
       break;
   }
 };
 
-const additionalAmount = computed(
-  () => mintedInput.value - position.value.minted
-);
+const additionalAmount = computed(() => {
+  const floatMintedInput = parseFloat(mintedInput.value);
+
+  if (!isNaN(floatMintedInput)) {
+    return bigNumberOperate('-', mintedInput.value, position.value.minted);
+  } else {
+    return '0';
+  }
+});
 
 const fees = computed(() =>
-  Math.abs((position.value.mintingFeePPM * additionalAmount.value) / 1000000)
-);
-
-const borrowersReserveContribution = computed(() =>
-  Math.abs(
-    (position.value.reserveContribution * additionalAmount.value) / 1000000
+  bigNumberOperate(
+    '/',
+    bigNumberOperate(
+      '*',
+      additionalAmount.value,
+      position.value.mintingFeePPM / 10
+    ),
+    100000
   )
 );
 
-const isNegativeDifference = computed(() => additionalAmount.value < 0);
+const borrowersReserveContribution = computed(() => {
+  const reserveTimesAdditionalAmount = bigNumberOperate(
+    '*',
+    position.value.reserveContribution,
+    additionalAmount.value
+  );
+
+  return bigNumberAbs(
+    bigNumberOperate('/', reserveTimesAdditionalAmount, 1000000)
+  );
+});
+
+const isNegativeDifference = computed(() => {
+  return bigNumberCompare('<', additionalAmount.value, 0);
+});
 
 const paidOutToWalletLabel = computed(() =>
   isNegativeDifference.value ? 'Taken in wallet' : 'Received in wallet'
 );
 
 const paidOutToWalletAmount = computed(() => {
+  let amount;
+
+  const reserveAndFees = fixedNumberOperate(
+    '+',
+    borrowersReserveContribution.value,
+    fees.value
+  );
+
   if (isNegativeDifference.value) {
-    return (
-      Math.abs(additionalAmount.value + fees.value) -
-      borrowersReserveContribution.value +
+    const additionalAndFees = fixedNumberOperate(
+      '-',
+      additionalAmount.value,
       fees.value
     );
-  } else {
-    return (
-      additionalAmount.value - borrowersReserveContribution.value - fees.value
+
+    amount = bigNumberOperate(
+      '-',
+      bigNumberAbs(additionalAndFees),
+      reserveAndFees
     );
+  } else {
+    amount = bigNumberOperate('-', additionalAmount.value, reserveAndFees);
   }
+
+  return formatDecimals(amount);
 });
 
 const collateralDifference = computed(() => {
-  const difference = collateralInput.value - position.value.collateralBalance;
-  return difference !== 0 ? difference.toFixed(2) : 0;
+  const difference = bigNumberOperate(
+    '-',
+    collateralInput.value,
+    position.value.collateralBalance
+  );
+
+  return !bigNumberCompare('=', difference, 0) ? difference : 0;
 });
+
+const isCollateralDifferenceNegative = computed(() =>
+  bigNumberCompare('<', collateralDifference.value, 0)
+);
 
 const collateralNote = computed(() => {
   if (!collateralDifference.value) return;
 
-  if (collateralDifference.value < 0) {
-    return `${Math.abs(collateralDifference.value)} ${
+  if (isCollateralDifferenceNegative.value) {
+    return `${bigNumberAbs(collateralDifference.value)} ${
       position.value.collateral.symbol
     } sent back to your wallet`;
   } else {
-    return `${collateralDifference.value} ${position.value.collateral?.symbol} taken from your wallet.`;
+    return `${formatCommify(collateralDifference.value)} ${
+      position.value.collateral?.symbol
+    } taken from your wallet.`;
   }
 });
 
 const liquidationPriceNote = computed(() => {
-  if (liquidationPriceInput.value > position.value.price)
-    return 'If you increase the price, there is a cool down period of 3 days.';
-  return null;
+  return bigNumberCompare(
+    '>',
+    liquidationPriceInput.value,
+    position.value.price
+  )
+    ? 'If you increase the price, there is a cool down period of 3 days.'
+    : null;
 });
 
 const reserveContributionLabel = computed(() =>
@@ -257,12 +334,14 @@ const reserveContributionLabel = computed(() =>
 );
 
 const disabled = computed(
-  () => !collateralInput.value || !liquidationPriceInput.value
+  () =>
+    !parseFloat(collateralInput.value) ||
+    !parseFloat(liquidationPriceInput.value)
 );
 
 const allow = async () => {
   pending.value = true;
-  const amountToApprove = 20000000000000;
+  const amountToApprove = '2000000';
 
   await collateralApprove(
     position.value.collateral.address,
@@ -282,10 +361,13 @@ const allow = async () => {
 const submit = async () => {
   pending.value = true;
 
+  const collateralDecimals = position.value.collateral.decimals;
+
   const tx = await adjustPosition(
     address,
     mintedInput,
     collateralInput,
+    collateralDecimals,
     liquidationPriceInput
   );
 
@@ -302,16 +384,18 @@ const submit = async () => {
 };
 
 const inputsInit = () => {
-  if (position.value.minted !== null) {
-    mintedInput.value = position.value.minted;
-  }
+  if (position.value) {
+    if (position.value.minted !== null) {
+      mintedInput.value = formatDecimals(position.value.minted);
+    }
 
-  if (position.value.collateralBalance !== null) {
-    collateralInput.value = position.value.collateralBalance;
-  }
+    if (position.value.collateralBalance !== null) {
+      collateralInput.value = formatDecimals(position.value.collateralBalance);
+    }
 
-  if (position.value.price !== null) {
-    liquidationPriceInput.value = position.value.price;
+    if (position.value.price !== null) {
+      liquidationPriceInput.value = formatDecimals(position.value.price);
+    }
   }
 };
 
@@ -320,38 +404,53 @@ const error = computed(() => {
     return {
       message: 'You can only adjust your own positions.',
     };
-  } else if (mintedInput.value < 0) {
+  } else if (bigNumberCompare('<', mintedInput.value, 0)) {
     return {
       message: 'You Cannot adjust a position with a negative amount.',
     };
-  } else if (position.value.challengedAmount > 0) {
+  } else if (bigNumberCompare('>', position.value.challengedAmount, 0)) {
     return {
       message: 'You cannot adjust a challenged position.',
     };
-  } else if (mintedInput.value > position.value.limit) {
+  } else if (bigNumberCompare('>', mintedInput.value, position.value.limit)) {
     return {
       message: `This position is limited to ${position.value.limit} ZCHF`,
     };
-  } else if (mintedInput.value > auth.user.ZCHF) {
+  } else if (
+    isNegativeDifference.value &&
+    bigNumberCompare('>', paidOutToWalletAmount.value, auth.user.ZCHF)
+  ) {
     return {
       message: 'Insufficient ZCHF amount in wallet',
     };
   } else if (
-    collateralDifference.value > position.value.collateral.userBalance
+    !isCollateralDifferenceNegative.value &&
+    bigNumberCompare(
+      '>',
+      collateralDifference.value,
+      auth.user.tokens[position.value.collateralAddress]?.amount
+    )
   ) {
     return {
       message: `Insufficient ${position.value.collateral.symbol} amount in wallet`,
     };
   } else if (
-    mintedInput.value >
-    collateralInput.value * liquidationPriceInput.value
+    bigNumberCompare(
+      '>',
+      mintedInput.value,
+      fixedNumberOperate(
+        '*',
+        collateralInput.value,
+        liquidationPriceInput.value
+      )
+    )
   ) {
     return {
       message: 'Insufficient collateral for the given amount.',
     };
   } else if (
-    mintedInput.value > position.value.minted &&
-    liquidationPriceInput.value > position.value.price
+    bigNumberCompare('>', mintedInput.value, position.value.minted) &&
+    bigNumberCompare('>', liquidationPriceInput.value, position.value.price)
   ) {
     return {
       message:
@@ -362,8 +461,9 @@ const error = computed(() => {
   return null;
 });
 
-if (!loading.value) inputsInit();
-else {
+if (!loading.value) {
+  inputsInit();
+} else {
   watch(loading, () => {
     inputsInit();
   });

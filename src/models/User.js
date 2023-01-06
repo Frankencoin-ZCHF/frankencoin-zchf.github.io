@@ -1,10 +1,12 @@
-import { Model } from 'pinia-orm';
-import { computed } from 'vue';
-import Position from './Position';
-import Challenge from './Challenge';
-import { contractUrl, shortenAddress } from '@/utils/address.js';
 import { addresses } from '@/contracts/dictionnary';
 import useEquityRepository from '@/repositories/useEquityRepository';
+import { contractUrl, shortenAddress } from '@/utils/address.js';
+import { Model } from 'pinia-orm';
+import { computed } from 'vue';
+
+import { fixedNumberOperate } from '../utils/math';
+import Challenge from './Challenge';
+import Position from './Position';
 
 export default class User extends Model {
   static entity = 'users';
@@ -14,10 +16,10 @@ export default class User extends Model {
     return {
       address: this.string(null),
 
-      ZCHFMintingHubAllowance: this.number(null),
-      XCHFBridgeAllowance: this.number(null),
+      ZCHFMintingHubAllowance: this.string(null),
+      XCHFBridgeAllowance: this.string(null),
 
-      votes: this.number(null),
+      votes: this.string(null),
 
       tokens: this.attr({}),
       allowances: this.attr({}),
@@ -39,18 +41,29 @@ export default class User extends Model {
     const equityRepository = useEquityRepository();
     const equity = computed(() => equityRepository.find(addresses.equity));
 
-    return equity.value.price === null || this.tokens[addresses.equity] === null
-      ? null
-      : this.tokens[addresses.equity]?.amount * equity.value.price;
+    if (equity.value.price === null || this.tokens[addresses.equity] === null)
+      return null;
+
+    return fixedNumberOperate(
+      '*',
+      this.tokens[addresses.equity]?.amount,
+      equity.value.price
+    );
   }
 
   get votingPower() {
     const equityRepository = useEquityRepository();
     const equity = computed(() => equityRepository.find(addresses.equity));
 
-    return this.votes === null || equity.value.totalVotes === null
-      ? null
-      : (this.votes / equity.value.totalVotes) * 100;
+    if (this.votes === null || equity.value.totalVotes === null) return null;
+
+    const votingPower = fixedNumberOperate(
+      '/',
+      this.votes,
+      fixedNumberOperate('/', equity.value.totalVotes, 100)
+    );
+
+    return votingPower;
   }
 
   get XCHF() {

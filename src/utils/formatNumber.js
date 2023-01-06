@@ -1,4 +1,8 @@
-export const formatCurrency = (amount, digits = 2) => {
+import { ethers } from 'ethers';
+
+export const formatCurrency = (value, digits = 2) => {
+  const amount = parseFloat(value);
+
   if (amount === null || !!isNaN(amount)) return null;
 
   if (amount < 0.01 && amount > 0 && digits) {
@@ -11,4 +15,21 @@ export const formatCurrency = (amount, digits = 2) => {
   });
 
   return formatter.format(amount);
+};
+
+export const formatDecimals = (value) => {
+  let string = String(value);
+  const patterns = ['.0', '.'];
+
+  patterns.forEach((pattern) => {
+    string = string.endsWith(pattern) ? string.replace(pattern, '') : string;
+  });
+
+  return string;
+};
+
+export const formatCommify = (amount) => {
+  const formatted = formatDecimals(amount);
+
+  return ethers.utils.commify(formatted);
 };

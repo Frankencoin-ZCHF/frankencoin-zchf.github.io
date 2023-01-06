@@ -1,18 +1,14 @@
 import useAuth from '@/auth';
-
-import { ethers } from 'ethers';
 import { addresses } from '@/contracts/dictionnary';
-
-import usePositionFetcher from '@/fetchers/usePositionFetcher';
 import useCollateralFetcher from '@/fetchers/useCollateralFetcher';
 import useFrankencoinFetcher from '@/fetchers/useFrankencoinFetcher';
-
+import usePositionFetcher from '@/fetchers/usePositionFetcher';
+import useCollateralsRepository from '@/repositories/useCollateralsRepository';
 import usePositionsRepository from '@/repositories/usePositionsRepository';
 import useUsersRepository from '@/repositories/useUsersRepository';
-import useCollateralsRepository from '@/repositories/useCollateralsRepository';
-
 import { addressCompare } from '@/utils/helpers';
 import fetchInfura from '@/utils/infura';
+import { ethers } from 'ethers';
 
 export default () => {
   const positionsRepository = usePositionsRepository();

@@ -1,7 +1,6 @@
-import { FRANKENCOIN_ABI, addresses } from '@/contracts/dictionnary';
 import useFetcher from '@/composables/useFetcher';
-
-import { floatToDec18 } from '@/utils/math';
+import { addresses, FRANKENCOIN_ABI } from '@/contracts/dictionnary';
+import { stringToDec18 } from '@/utils/math';
 
 export default () => {
   const fetcher = useFetcher(addresses.frankencoin, FRANKENCOIN_ABI);
@@ -29,7 +28,7 @@ export default () => {
     return await fetcher.one({
       method: 'calculateAssignedReserve',
       formatter: 'amount',
-      params: [floatToDec18(minted), reserveContribution],
+      params: [stringToDec18(minted), reserveContribution],
     });
   };
 

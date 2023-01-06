@@ -9,7 +9,7 @@
   <section>
     <div class="mx-auto flex max-w-2xl flex-col gap-y-4 px-4 sm:px-8">
       <AppBox>
-        <div class="flex flex-col gap-12" v-if="position">
+        <div class="flex flex-col gap-12" v-if="!loading">
           <div
             class="grid grid-cols-1 gap-x-1 gap-y-8 sm:grid-cols-2 lg:grid-cols-3"
           >
@@ -130,43 +130,47 @@
     </div>
 
     <AppPageHeader title="Positions challenges" class="mt-8" />
-    <AppTable :columns="columns" v-if="challenges.length > 0">
-      <ChallengeRow
-        v-for="challenge in challenges"
-        :columns="columns"
-        :challenge="challenge"
-        :key="challenge.address"
-      />
-    </AppTable>
 
-    <AppTableRow v-else>
-      This position has not yet been challenged.
-    </AppTableRow>
+    <AppTable :columns="columns">
+      <template v-if="challenges.length > 0 && !loading">
+        <ChallengeRow
+          v-for="challenge in challenges"
+          :columns="columns"
+          :challenge="challenge"
+          :key="challenge.address"
+        />
+      </template>
+      <AppTableRow class="col-span-2 md:col-span-1" v-else>
+        <template v-if="!loading"
+          >This position has not yet been challenged.</template
+        >
+        <AppLoading v-else />
+      </AppTableRow>
+    </AppTable>
   </section>
 </template>
 
 <script setup>
-import { computed } from 'vue';
-import { useRoute } from 'vue-router';
-import { addresses } from '@/contracts/dictionnary';
-
-import usePositionsRepository from '@/repositories/usePositionsRepository';
-import useChallengesRepository from '@/repositories/useChallengesRepository';
-
-import { shortenAddress, contractUrl } from '@/utils/address';
-
 import AppBox from '@/components/AppBox.vue';
-import AppPageHeader from '@/components/AppPageHeader.vue';
 import AppButton from '@/components/AppButton.vue';
 import AppLoading from '@/components/AppLoading.vue';
-import DisplayLabel from '@/components/DisplayLabel.vue';
-import DisplayAmount from '@/components/DisplayAmount.vue';
+import AppPageHeader from '@/components/AppPageHeader.vue';
 import AppTable from '@/components/AppTable.vue';
 import AppTableRow from '@/components/AppTableRow.vue';
 import ChallengeRow from '@/components/ChallengeRow.vue';
+import DisplayAmount from '@/components/DisplayAmount.vue';
+import DisplayLabel from '@/components/DisplayLabel.vue';
+import { addresses } from '@/contracts/dictionnary';
+import useChallengesRepository from '@/repositories/useChallengesRepository';
+import usePositionsRepository from '@/repositories/usePositionsRepository';
+import { contractUrl, shortenAddress } from '@/utils/address';
+import { computed, inject } from 'vue';
+import { useRoute } from 'vue-router';
 
 const route = useRoute();
 const address = route.params.address;
+
+const loading = inject('loading');
 
 const positionsRepository = usePositionsRepository();
 const challengesRepository = useChallengesRepository();

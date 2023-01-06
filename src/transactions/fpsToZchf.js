@@ -1,14 +1,11 @@
-import { EQUITY_ABI, addresses } from '@/contracts/dictionnary';
-
-import config from '@/config';
 import useAuth from '@/auth';
-
 import useContract from '@/composables/useContract';
 import useNotification from '@/composables/useNotification';
 import useTransaction from '@/composables/useTransaction';
-
-import { floatToDec18, dec18ToFloat } from '@/utils/math';
+import config from '@/config';
+import { addresses, EQUITY_ABI } from '@/contracts/dictionnary';
 import { formatCurrency } from '@/utils/formatNumber';
+import { dec18ToString, stringToDec18 } from '@/utils/math';
 
 export default async (amount) => {
   const auth = useAuth();
@@ -17,7 +14,7 @@ export default async (amount) => {
   const { addNotification } = useNotification();
   const { contract } = useContract(addresses.equity, EQUITY_ABI);
 
-  const dAmount = floatToDec18(amount.value);
+  const dAmount = stringToDec18(amount.value);
 
   const transaction = async () => await contract.redeem(auth.wallet, dAmount);
 
@@ -26,7 +23,7 @@ export default async (amount) => {
   if (!tx.error) {
     const txReceipt = await config.provider.getTransactionReceipt(tx.hash);
 
-    const received = formatCurrency(dec18ToFloat(txReceipt.logs[1].data), 5);
+    const received = formatCurrency(dec18ToString(txReceipt.logs[1].data), 5);
 
     addNotification({
       type: 'success',

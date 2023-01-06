@@ -27,9 +27,8 @@
 </template>
 
 <script setup>
-import { useRoute } from 'vue-router';
-
 import AppButton from '@/components/AppButton.vue';
+import { useRoute } from 'vue-router';
 
 const route = useRoute();
 </script>

@@ -1,18 +1,16 @@
-import { MINTINGHUB_ABI, addresses } from '@/contracts/dictionnary';
-import { floatToDec18 } from '@/utils/math';
-
-import config from '@/config';
-
 import useContract from '@/composables/useContract';
 import useNotification from '@/composables/useNotification';
 import useTransaction from '@/composables/useTransaction';
+import config from '@/config';
+import { addresses, MINTINGHUB_ABI } from '@/contracts/dictionnary';
+import { stringToDec18 } from '@/utils/math';
 
-export default async (positionAddress, amount) => {
+export default async (positionAddress, amount, collateralDecimals) => {
   const { executeTransaction } = useTransaction();
   const { addNotification } = useNotification();
   const { contract } = useContract(addresses.mintingHub, MINTINGHUB_ABI);
 
-  const dAmount = floatToDec18(amount.value);
+  const dAmount = stringToDec18(amount.value, collateralDecimals);
 
   const transaction = async () =>
     await contract.launchChallenge(positionAddress, dAmount);

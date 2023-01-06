@@ -1,5 +1,5 @@
-import { Model } from 'pinia-orm';
 import { contractUrl, shortenAddress } from '@/utils/address.js';
+import { Model } from 'pinia-orm';
 
 export default class Token extends Model {
   static entity = 'tokens';
