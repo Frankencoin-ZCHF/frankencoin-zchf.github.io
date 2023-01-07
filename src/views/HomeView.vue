@@ -299,11 +299,11 @@
           <AppButton
             full
             tag="a"
-            :href="stablecoin.url"
+            :href="contractUrl(addresses.bridge)"
             target="_blank"
             secondary
           >
-            {{ stablecoin.shortenAddress }}
+            {{ shortenAddress(addresses.bridge) }}
           </AppButton>
           <AppButton
             full
