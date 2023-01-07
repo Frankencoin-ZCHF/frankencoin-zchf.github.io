@@ -38,8 +38,12 @@ export default class Position extends Model {
     };
   }
 
-  get scaledPrice(){
-    return fixedNumberOperate('/', this.price, (10 ** (18 - this.collateral.decimals)));
+  get scaledPrice() {
+    return fixedNumberOperate(
+      '/',
+      this.price,
+      10 ** (18 - this.collateral.decimals)
+    );
   }
 
   get isOwningPosition() {

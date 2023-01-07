@@ -152,7 +152,6 @@ import useUsersRepository from '@/repositories/useUsersRepository';
 import adjustPosition from '@/transactions/adjustPosition';
 import collateralApprove from '@/transactions/collateralApprove';
 import { formatCommify, formatDecimals } from '@/utils/formatNumber';
-import { BigNumber } from 'ethers';
 import {
   bigNumberAbs,
   bigNumberCompare,
@@ -185,7 +184,10 @@ const liquidationPriceInput = ref(null);
 const pending = ref(false);
 
 const repayPosition = computed(() => {
-  return bigNumberMax(0, bigNumberOperate('-', position.value.minted, auth.user.ZCHF));
+  return bigNumberMax(
+    0,
+    bigNumberOperate('-', position.value.minted, auth.user.ZCHF)
+  );
 });
 
 const allowed = computed(() =>
@@ -366,7 +368,8 @@ const submit = async () => {
     mintedInput,
     collateralInput,
     collateralDecimals,
-    liquidationPriceInput);
+    liquidationPriceInput
+  );
 
   pending.value = false;
 
@@ -447,7 +450,11 @@ const error = computed(() => {
     };
   } else if (
     bigNumberCompare('>', mintedInput.value, position.value.minted) &&
-    bigNumberCompare('>', liquidationPriceInput.value, position.value.scaledPrice)
+    bigNumberCompare(
+      '>',
+      liquidationPriceInput.value,
+      position.value.scaledPrice
+    )
   ) {
     return {
       message:

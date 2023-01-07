@@ -24,6 +24,12 @@ module.exports = {
       'error',
       { ignoreCase: true, ignoreDeclarationSort: true },
     ],
+    'prettier/prettier': [
+      'error',
+      {
+        'endOfLine': 'auto',
+      }
+    ]
   },
   overrides: [
     {

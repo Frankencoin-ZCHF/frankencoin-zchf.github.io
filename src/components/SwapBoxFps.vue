@@ -187,16 +187,16 @@ watch([loading, isCalculating, amount, isReversed], () => {
 
 updateConversionNote();
 
-const limit = computed(() =>
-  null // isReversed.value ? fixedNumberOperate('-', equity.value.totalSupply, 1) : null
+const limit = computed(
+  () => null // isReversed.value ? fixedNumberOperate('-', equity.value.totalSupply, 1) : null
 );
 
-const limitReached = computed(() =>
-  false // isReversed.value ? bigNumberCompare('>', amount.value, limit.value) : false
+const limitReached = computed(
+  () => false // isReversed.value ? bigNumberCompare('>', amount.value, limit.value) : false
 );
 
-const limitLabel = computed(() =>
-  null //isReversed.value ? 'Max FPS available' : null
+const limitLabel = computed(
+  () => null //isReversed.value ? 'Max FPS available' : null
 );
 
 provide('disabled', disabled);

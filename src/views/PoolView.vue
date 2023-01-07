@@ -1,7 +1,5 @@
 <template>
-  <AppPageHeader
-    title="Buy or redeem Frankencoin Pool Shares (FPS)"
-  />
+  <AppPageHeader title="Buy or redeem Frankencoin Pool Shares (FPS)" />
 
   <section class="container mx-auto">
     <div class="flex flex-col gap-2" v-if="!loading">

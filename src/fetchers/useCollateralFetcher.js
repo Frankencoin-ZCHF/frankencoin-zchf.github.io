@@ -24,13 +24,21 @@ export default (address) => {
     };
 
     const data = await fetcher.all(requests);
-    console.log("Setting decimals of " + tokenAddress + " to " + data.decimals);
+    console.log('Setting decimals of ' + tokenAddress + ' to ' + data.decimals);
     decimals.value = data.decimals;
     return data;
   };
 
   const getBalance = async (address) => {
-    console.log("Getting balance for address " + address + " on token " + tokenAddress + " with " + decimals.value + " decimals");
+    console.log(
+      'Getting balance for address ' +
+        address +
+        ' on token ' +
+        tokenAddress +
+        ' with ' +
+        decimals.value +
+        ' decimals'
+    );
     return await fetcher.one({
       method: 'balanceOf',
       formatter: 'amount',
