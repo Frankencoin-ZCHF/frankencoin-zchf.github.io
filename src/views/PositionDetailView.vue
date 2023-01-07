@@ -129,7 +129,7 @@
       </AppBox>
     </div>
 
-    <AppPageHeader title="Positions challenges" class="mt-8" />
+    <AppPageHeader title="Open Challenges" class="mt-8" />
 
     <AppTable :columns="columns">
       <template v-if="challenges.length > 0 && !loading">
@@ -142,7 +142,7 @@
       </template>
       <AppTableRow class="col-span-2 md:col-span-1" v-else>
         <template v-if="!loading"
-          >This position has not yet been challenged.</template
+          >This position is currently not being challenged.</template
         >
         <AppLoading v-else />
       </AppTableRow>
