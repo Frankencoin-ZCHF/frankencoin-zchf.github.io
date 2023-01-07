@@ -1,6 +1,6 @@
 <template>
   <AppPageHeader
-    title="Increase, decrease or change the liquidation risk of your position"
+    title="Adjust Your Position"
     backText="Back to position"
     :backTo="'/position/detail/' + address"
   />
@@ -152,6 +152,7 @@ import useUsersRepository from '@/repositories/useUsersRepository';
 import adjustPosition from '@/transactions/adjustPosition';
 import collateralApprove from '@/transactions/collateralApprove';
 import { formatCommify, formatDecimals } from '@/utils/formatNumber';
+import { BigNumber } from 'ethers';
 import {
   bigNumberAbs,
   bigNumberCompare,
@@ -184,10 +185,7 @@ const liquidationPriceInput = ref(null);
 const pending = ref(false);
 
 const repayPosition = computed(() => {
-  return bigNumberMax(
-    0,
-    bigNumberOperate('-', position.value.minted, auth.user.ZCHF)
-  );
+  return bigNumberMax(0, bigNumberOperate('-', position.value.minted, auth.user.ZCHF));
 });
 
 const allowed = computed(() =>
@@ -323,7 +321,7 @@ const liquidationPriceNote = computed(() => {
   return bigNumberCompare(
     '>',
     liquidationPriceInput.value,
-    position.value.price
+    position.value.scaledPrice
   )
     ? 'If you increase the price, there is a cool down period of 3 days.'
     : null;
@@ -368,8 +366,7 @@ const submit = async () => {
     mintedInput,
     collateralInput,
     collateralDecimals,
-    liquidationPriceInput
-  );
+    liquidationPriceInput);
 
   pending.value = false;
 
@@ -394,7 +391,7 @@ const inputsInit = () => {
     }
 
     if (position.value.price !== null) {
-      liquidationPriceInput.value = formatDecimals(position.value.price);
+      liquidationPriceInput.value = formatDecimals(position.value.scaledPrice);
     }
   }
 };
@@ -450,7 +447,7 @@ const error = computed(() => {
     };
   } else if (
     bigNumberCompare('>', mintedInput.value, position.value.minted) &&
-    bigNumberCompare('>', liquidationPriceInput.value, position.value.price)
+    bigNumberCompare('>', liquidationPriceInput.value, position.value.scaledPrice)
   ) {
     return {
       message:

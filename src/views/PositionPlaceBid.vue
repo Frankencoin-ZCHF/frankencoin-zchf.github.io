@@ -185,7 +185,7 @@ const buyNowPrice = computed(() => {
   if (!parseFloat(challenge.value.size)) {
     return '0';
   } else {
-    return fixedNumberOperate('*', position.value.price, challenge.value.size);
+    return fixedNumberOperate('*', position.value.scaledPrice, challenge.value.size);
   }
 });
 

@@ -117,8 +117,8 @@ const position = computed(() => positionsRepository.getOne(address));
 const amount = ref();
 
 const result = computed(() => {
-  if (parseFloat(amount.value) && position.value?.price)
-    return fixedNumberOperate('/', amount.value, position.value.price);
+  if (parseFloat(amount.value) && position.value?.scaledPrice)
+    return fixedNumberOperate('/', amount.value, position.value.scaledPrice);
   return 0;
 });
 
@@ -141,10 +141,10 @@ const userValue = computed(() => {
     return fixedNumberOperate(
       '*',
       auth.user.tokens[position.value.collateralAddress]?.amount,
-      position.value.price
+      position.value.scaledPrice
     );
   } else {
-    return position.value.price;
+    return position.value.scaledPrice;
   }
 });
 

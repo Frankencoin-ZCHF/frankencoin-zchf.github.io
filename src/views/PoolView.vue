@@ -1,6 +1,6 @@
 <template>
   <AppPageHeader
-    title="Buy Frankencoin Pool Shares (FPS) to earn rewards and voting power."
+    title="Buy or redeem Frankencoin Pool Shares (FPS)"
   />
 
   <section class="container mx-auto">

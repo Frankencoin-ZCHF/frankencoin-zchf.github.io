@@ -188,15 +188,15 @@ watch([loading, isCalculating, amount, isReversed], () => {
 updateConversionNote();
 
 const limit = computed(() =>
-  isReversed.value ? fixedNumberOperate('-', equity.value.totalSupply, 1) : null
+  null // isReversed.value ? fixedNumberOperate('-', equity.value.totalSupply, 1) : null
 );
 
 const limitReached = computed(() =>
-  isReversed.value ? bigNumberCompare('>', amount.value, limit.value) : false
+  false // isReversed.value ? bigNumberCompare('>', amount.value, limit.value) : false
 );
 
 const limitLabel = computed(() =>
-  isReversed.value ? 'Max FPS available' : null
+  null //isReversed.value ? 'Max FPS available' : null
 );
 
 provide('disabled', disabled);

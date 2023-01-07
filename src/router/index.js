@@ -50,7 +50,7 @@ const router = createRouter({
       name: 'pool',
       component: PoolView,
       meta: {
-        documentation: 'https://docs.frankencoin.com/reserve',
+        documentation: 'https://docs.frankencoin.com/reserve/equity',
       },
     },
     {

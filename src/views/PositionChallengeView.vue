@@ -20,7 +20,7 @@
           <div class="flex">
             <div class="flex-1">Buy now price</div>
             <DisplayAmount
-              :amount="position.price"
+              :amount="position.scaledPrice"
               :currency="frankencoin.symbol"
               :currencyAddress="frankencoin.address"
               :bold="false"
@@ -68,7 +68,7 @@
                 Someone bids the 'buy now' price before the end of the auction.
                 In that case, the bidder buys the amount of
                 {{ position.collateral.symbol }} tokens you provided for
-                {{ formatCurrency(position.price) }} ZCHF per unit.
+                {{ formatCurrency(position.scaledPrice) }} ZCHF per unit.
               </li>
               <li>
                 The auction ends with the highest bids being below the 'buy now'
@@ -155,7 +155,7 @@ const pending = ref(false);
 const maximumBid = computed(() =>
   disabled.value
     ? '0'
-    : fixedNumberOperate('*', position.value.price, amount.value)
+    : fixedNumberOperate('*', position.value.scaledPrice, amount.value)
 );
 
 const challengeDuration = computed(() =>

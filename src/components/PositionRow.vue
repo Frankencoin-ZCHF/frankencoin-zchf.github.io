@@ -20,7 +20,7 @@
 
         <DisplayAmount
           :inline="true"
-          :amount="position.price"
+          :amount="position.scaledPrice"
           :currencyAddress="addresses.frankencoin"
           currency="ZCHF"
         />

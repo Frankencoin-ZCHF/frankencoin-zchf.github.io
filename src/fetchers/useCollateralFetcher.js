@@ -4,6 +4,7 @@ import { ref } from 'vue';
 
 export default (address) => {
   const fetcher = useFetcher(address, IERC20_ABI);
+  const tokenAddress = address;
   let decimals = ref(18);
 
   const all = async () => {
@@ -23,11 +24,13 @@ export default (address) => {
     };
 
     const data = await fetcher.all(requests);
+    console.log("Setting decimals of " + tokenAddress + " to " + data.decimals);
     decimals.value = data.decimals;
     return data;
   };
 
   const getBalance = async (address) => {
+    console.log("Getting balance for address " + address + " on token " + tokenAddress + " with " + decimals.value + " decimals");
     return await fetcher.one({
       method: 'balanceOf',
       formatter: 'amount',

@@ -35,7 +35,7 @@
             <DisplayLabel label="Liquidation Price">
               <DisplayAmount
                 size="small"
-                :amount="position.price"
+                :amount="position.scaledPrice"
                 currency="ZCHF"
                 :currencyAddress="addresses.frankencoin"
               />
