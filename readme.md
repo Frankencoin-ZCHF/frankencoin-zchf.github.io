@@ -13,7 +13,13 @@ This frontent allows you to interact with the FrankenCoin set of smartcontracts.
 
 ## Recommended IDE Setup
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur)
+- [VSCode](https://code.visualstudio.com/)
+- [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur)
+- [Prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)
+- [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint)
+
+To automatically format the file on save, In Visual Studio Code, press Control + Shift + P or Command + Shift + P (Mac) to open the command palette and type setting and then select Preferences: Open User Settings option.
+Search for format on save setting and check the checkbox.
 
 ## Requirements
 
