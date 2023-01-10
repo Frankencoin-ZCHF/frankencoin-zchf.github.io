@@ -168,6 +168,16 @@ const error = computed(() => {
       message: 'Cannot use a negative amount.',
     };
   } else if (
+    bigNumberCompare(
+      '>',
+      amount.value,
+      auth.user.tokens[position.value.collateralAddress]?.amount
+    )
+  ) {
+    return {
+      message: `Not enough ${position.value.collateral.symbol} in your Wallet`,
+    };
+  } else if (
     bigNumberCompare('>', amount.value, position.value.collateralBalance)
   ) {
     return {
