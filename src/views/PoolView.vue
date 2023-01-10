@@ -1,5 +1,5 @@
 <template>
-  <AppPageHeader title="Buy or redeem Frankencoin Pool Shares (FPS)" />
+  <AppPageHeader title="Frankencoin Pool Shares (FPS)" />
 
   <section class="container mx-auto">
     <div class="flex flex-col gap-2" v-if="!loading">
@@ -55,7 +55,7 @@
       <div class="grid grid-cols-1 gap-1 lg:grid-cols-2">
         <AppBox>
           <div class="m-auto max-w-lg pb-8">
-            <h6 class="mb-8 text-center">Buy or redeem FPS</h6>
+            <h6 class="mb-8 text-center">Buy or redeem</h6>
             <SwapBoxFps></SwapBoxFps>
           </div>
         </AppBox>

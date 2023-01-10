@@ -38,6 +38,7 @@
       :class="{ 'opacity-50': isCalculating }"
     >
       {{ conversionNote }}&nbsp;
+      <div v-if="isReversed">Redemption requires a 90 days holding period.</div>
     </div>
   </AppForm>
 </template>
